@@ -1,5 +1,9 @@
 package com.catai.api.circuito_ciudad.model;
 
+import com.catai.api.circuito.model.Circuito;
+import com.catai.api.circuito.model.CircuitoDto;
+import com.catai.api.ciudad.model.CiudadDto;
+
 /**
  * DTO  que representa la relación entre un circuito turístico y las ciudades
  * por las que pasa. Esta clase se utiliza para transferir datos de la relación
@@ -12,6 +16,8 @@ package com.catai.api.circuito_ciudad.model;
  */
 public class CircuitoCiudadDto {
     private Long id;
+    private CircuitoDto circuito;
+    private CiudadDto ciudad;
 
 
 }

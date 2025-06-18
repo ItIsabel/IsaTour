@@ -3,6 +3,8 @@ package com.catai.api.circuito_ciudad;
 import com.catai.api.circuito.model.Circuito;
 import com.catai.api.circuito.model.CircuitoDto;
 import com.catai.api.circuito.service.CircuitoService;
+import com.catai.api.circuito_ciudad.model.CircuitoCiudad;
+import com.catai.api.circuito_ciudad.model.CircuitoCiudadDto;
 import com.catai.api.circuito_ciudad.model.FiltroDto;
 import com.catai.api.circuito_ciudad.service.CircuitoCiudadService;
 import org.modelmapper.ModelMapper;
@@ -17,7 +19,7 @@ import java.util.stream.Collectors;
  * @version 1.0
  * @since 1.0
  */
-@RequestMapping(value = "/ciudades")
+@RequestMapping(value = "/buscar")
 @RestController
 @CrossOrigin(origins = "*")
 public class CircuitoCiudadController {
@@ -34,9 +36,9 @@ public class CircuitoCiudadController {
      * @return list de {@link CircuitoDto}
      */
     @RequestMapping(path = "", method = RequestMethod.POST)
-    public List<CircuitoDto> encuentraCircuitosenCiudad(@RequestBody FiltroDto dto) {
-        List<Circuito> lista = this.circuitoCiudadService.encuentraCircuitosenCiudad(dto);
+    public List<CircuitoCiudadDto> encuentraCircuitosenCiudad(@RequestBody FiltroDto dto) {
+        List<CircuitoCiudad> lista = this.circuitoCiudadService.encuentraCircuitosenCiudad(dto);
 
-        return lista.stream().map(e -> mapper.map(e, CircuitoDto.class)).collect(Collectors.toList());
+        return lista.stream().map(e -> mapper.map(e, CircuitoCiudadDto.class)).collect(Collectors.toList());
     }
 }

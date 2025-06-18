@@ -16,5 +16,5 @@ public interface CiudadService {
      * @param nombreCiudad El nombre de la ciudad que se desea buscar.
      * @return Un objeto {@link  Ciudad} con el nombre especificado.
      */
-    public Ciudad getCiudad(String nombreCiudad);
+    public Ciudad getCiudadporNombre(String nombreCiudad);
 }

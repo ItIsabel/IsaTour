@@ -23,7 +23,7 @@ public class CiudadServiceImpl implements CiudadService{
      * {@inheritDoc}
      */
     @Override
-    public Ciudad getCiudad(String nombreCiudad) {
-        return this.ciudadRepository.getCiudadByNombre(nombreCiudad);
+    public Ciudad getCiudadporNombre(String nombreCiudad) {
+        return this.ciudadRepository.getCiudadporNombre(nombreCiudad);
     }
 }
