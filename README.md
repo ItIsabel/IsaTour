@@ -18,8 +18,8 @@ demo de API para TTOO. De momento solo backend sin terminar...
 - Tipo de proyecto: Maven
 - Lenguaje: Java
 - Versión de Spring Boot: 3.2.4 (o similar versión 3.x no-SNAPSHOT)
-- Group: com.ccsw
-- ArtifactId: tutorial
+- Group: com.catai
+- ArtifactId: api
 - Versión de Java: 17 o superior
 
 ### Dependencias Backend
