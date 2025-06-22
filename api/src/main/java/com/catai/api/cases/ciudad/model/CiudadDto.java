@@ -1,33 +1,25 @@
-package com.catai.api.ciudad.model;
-
-import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
+package com.catai.api.cases.ciudad.model;
 
 /**
- * Entidad que representa una ciudad por la que pasan circuitos
- * Esta clase mapea a la tabla "ciudad" en la base de datos y contiene
- * información sobre su nombre.
+ * DTO para la entidad Ciudad.
+ * Esta clase se utiliza para transferir datos de ciudad
+ * entre las capas de la aplicación.
  *
  * @author Isabel Alvarez
  * @version 1.0
  * @since 1.0
  */
-@Entity
-@Table(name= "ciudad")
-public class Ciudad {
+public class CiudadDto {
 
     /**
      * Identificador único de la ciudad.
      * Se genera automáticamente utilizando la estrategia IDENTITY.
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
      * Nombre de la ciudad.
      */
-    @Column (name="nombre")
     private String nombre;
 
 
@@ -73,4 +65,5 @@ public class Ciudad {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+
 }

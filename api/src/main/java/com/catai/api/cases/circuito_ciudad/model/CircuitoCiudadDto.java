@@ -1,8 +1,7 @@
-package com.catai.api.circuito_ciudad.model;
+package com.catai.api.cases.circuito_ciudad.model;
 
-import com.catai.api.circuito.model.Circuito;
-import com.catai.api.circuito.model.CircuitoDto;
-import com.catai.api.ciudad.model.CiudadDto;
+import com.catai.api.cases.circuito.model.CircuitoDto;
+import com.catai.api.cases.ciudad.model.CiudadDto;
 
 /**
  * DTO  que representa la relación entre un circuito turístico y las ciudades

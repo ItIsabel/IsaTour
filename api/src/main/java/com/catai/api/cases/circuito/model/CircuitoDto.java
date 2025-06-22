@@ -1,4 +1,4 @@
-package com.catai.api.circuito.model;
+package com.catai.api.cases.circuito.model;
 
 /**
  * DTO para la entidad Circuito.

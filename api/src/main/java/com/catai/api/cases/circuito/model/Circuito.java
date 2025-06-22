@@ -1,4 +1,4 @@
-package com.catai.api.circuito.model;
+package com.catai.api.cases.circuito.model;
 
 import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;

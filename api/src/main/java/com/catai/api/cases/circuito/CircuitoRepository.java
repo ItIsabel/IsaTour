@@ -1,4 +1,4 @@
-package com.catai.api.circuito;
+package com.catai.api.cases.circuito;
 
 public interface CircuitoRepository {
 }

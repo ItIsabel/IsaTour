@@ -1,7 +1,7 @@
-package com.catai.api.circuito_ciudad.model;
+package com.catai.api.cases.circuito_ciudad.model;
 
-import com.catai.api.circuito.model.Circuito;
-import com.catai.api.ciudad.model.Ciudad;
+import com.catai.api.cases.circuito.model.Circuito;
+import com.catai.api.cases.ciudad.model.Ciudad;
 import jakarta.persistence.*;
 import org.springframework.data.annotation.Id;
 

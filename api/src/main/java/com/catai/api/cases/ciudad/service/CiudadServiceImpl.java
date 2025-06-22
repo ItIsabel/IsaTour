@@ -1,10 +1,12 @@
-package com.catai.api.ciudad.service;
+package com.catai.api.cases.ciudad.service;
 
-import com.catai.api.ciudad.CiudadRepository;
-import com.catai.api.ciudad.model.Ciudad;
+import com.catai.api.cases.ciudad.CiudadRepository;
+import com.catai.api.cases.ciudad.model.Ciudad;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author Isabel Alvarez
@@ -25,5 +27,14 @@ public class CiudadServiceImpl implements CiudadService{
     @Override
     public Ciudad getCiudadporNombre(String nombreCiudad) {
         return this.ciudadRepository.getCiudadporNombre(nombreCiudad);
+    }
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Ciudad> getTodasCiudades() {
+        return this.ciudadRepository.findAll();
     }
 }
