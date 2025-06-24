@@ -1,9 +1,8 @@
-package com.catai.api.cases.circuito_ciudad.model;
+package com.catai.api.cases.circuitoCiudad.model;
 
 import com.catai.api.cases.circuito.model.Circuito;
 import com.catai.api.cases.ciudad.model.Ciudad;
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 
 /**
  * Entidad que representa la relación entre un circuito turístico y las ciudades por las que pasa.

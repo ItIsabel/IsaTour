@@ -1,4 +1,4 @@
-package com.catai.api.cases.circuito_ciudad.model;
+package com.catai.api.cases.circuitoCiudad.model;
 
 public class FiltroDto {
     private String nombreCiudad;

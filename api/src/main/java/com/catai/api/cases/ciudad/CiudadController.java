@@ -1,11 +1,5 @@
 package com.catai.api.cases.ciudad;
 
-import com.catai.api.cases.circuito.model.Circuito;
-import com.catai.api.cases.circuito.model.CircuitoDto;
-import com.catai.api.cases.circuito_ciudad.model.CircuitoCiudad;
-import com.catai.api.cases.circuito_ciudad.model.CircuitoCiudadDto;
-import com.catai.api.cases.circuito_ciudad.model.FiltroDto;
-import com.catai.api.cases.circuito_ciudad.service.CircuitoCiudadService;
 import com.catai.api.cases.ciudad.model.Ciudad;
 import com.catai.api.cases.ciudad.model.CiudadDto;
 import com.catai.api.cases.ciudad.service.CiudadService;

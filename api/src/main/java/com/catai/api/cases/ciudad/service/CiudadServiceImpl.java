@@ -26,7 +26,7 @@ public class CiudadServiceImpl implements CiudadService{
      */
     @Override
     public Ciudad getCiudadporNombre(String nombreCiudad) {
-        return this.ciudadRepository.getCiudadporNombre(nombreCiudad);
+        return this.ciudadRepository.findByNombre(nombreCiudad);
     }
 
 

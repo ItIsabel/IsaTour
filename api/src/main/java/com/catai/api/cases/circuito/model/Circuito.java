@@ -1,7 +1,6 @@
 package com.catai.api.cases.circuito.model;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 
 /**
  * Entidad que representa un circuito turístico.

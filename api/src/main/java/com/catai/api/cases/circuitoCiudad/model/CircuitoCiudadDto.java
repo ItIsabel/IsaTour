@@ -1,4 +1,4 @@
-package com.catai.api.cases.circuito_ciudad.model;
+package com.catai.api.cases.circuitoCiudad.model;
 
 import com.catai.api.cases.circuito.model.CircuitoDto;
 import com.catai.api.cases.ciudad.model.CiudadDto;
@@ -18,5 +18,27 @@ public class CircuitoCiudadDto {
     private CircuitoDto circuito;
     private CiudadDto ciudad;
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public CircuitoDto getCircuito() {
+        return circuito;
+    }
+
+    public void setCircuito(CircuitoDto circuito) {
+        this.circuito = circuito;
+    }
+
+    public CiudadDto getCiudad() {
+        return ciudad;
+    }
+
+    public void setCiudad(CiudadDto ciudad) {
+        this.ciudad = ciudad;
+    }
 }

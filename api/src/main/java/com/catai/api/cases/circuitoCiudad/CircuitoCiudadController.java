@@ -1,11 +1,10 @@
-package com.catai.api.cases.circuito_ciudad;
+package com.catai.api.cases.circuitoCiudad;
 
 import com.catai.api.cases.circuito.model.Circuito;
-import com.catai.api.cases.circuito.model.CircuitoDto;
-import com.catai.api.cases.circuito_ciudad.model.CircuitoCiudad;
-import com.catai.api.cases.circuito_ciudad.model.CircuitoCiudadDto;
-import com.catai.api.cases.circuito_ciudad.model.FiltroDto;
-import com.catai.api.cases.circuito_ciudad.service.CircuitoCiudadService;
+import com.catai.api.cases.circuitoCiudad.model.CircuitoCiudad;
+import com.catai.api.cases.circuitoCiudad.model.CircuitoCiudadDto;
+import com.catai.api.cases.circuitoCiudad.model.FiltroDto;
+import com.catai.api.cases.circuitoCiudad.service.CircuitoCiudadService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,12 +1,11 @@
-package com.catai.api.cases.circuito_ciudad.service;
+package com.catai.api.cases.circuitoCiudad.service;
 
-import com.catai.api.cases.circuito_ciudad.CircuitoCiudadRepository;
-import com.catai.api.cases.circuito_ciudad.model.CircuitoCiudad;
-import com.catai.api.cases.circuito_ciudad.model.FiltroDto;
+import com.catai.api.cases.circuitoCiudad.CircuitoCiudadRepository;
+import com.catai.api.cases.circuitoCiudad.model.CircuitoCiudad;
+import com.catai.api.cases.circuitoCiudad.model.FiltroDto;
 import com.catai.api.cases.ciudad.model.Ciudad;
 import com.catai.api.cases.ciudad.service.CiudadService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -59,7 +58,7 @@ public class CircuitoCiudadServiceImpl implements CircuitoCiudadService {
             }
 
             // Buscar circuitos por ID de ciudad
-            List<CircuitoCiudad> circuitos = circuitoCiudadRepository.getCircuitosbyIdCiudad(ciudad.getId());
+            List<CircuitoCiudad> circuitos = circuitoCiudadRepository.findByCiudadId(ciudad.getId());
 
             log.info("Se encontraron {} circuitos para la ciudad: {}",
                     circuitos.size(), dto.getNombreCiudad());

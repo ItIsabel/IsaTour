@@ -1,7 +1,6 @@
 package com.catai.api.cases.ciudad.model;
 
 import jakarta.persistence.*;
-import org.springframework.data.annotation.Id;
 
 /**
  * Entidad que representa una ciudad por la que pasan circuitos
