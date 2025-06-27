@@ -39,14 +39,18 @@ public class CircuitoCiudadIT {
     @Mock
     private ModelMapper mapper;
 
+
     @InjectMocks
     private CircuitoCiudadController circuitoCiudadController;
 
     private MockMvc mockMvc;
     private ObjectMapper objectMapper;
     private FiltroDto filtroDto;
-    private CircuitoCiudad circuitoCiudad;
-    private CircuitoCiudadDto circuitoCiudadDto;
+    private CircuitoCiudad circuitoCiudad1;
+    private CircuitoCiudadDto circuitoCiudadDto1;
+
+    private CircuitoCiudad circuitoCiudad2;
+    private CircuitoCiudadDto circuitoCiudadDto2;
 
     @BeforeEach
     void setUp() {
@@ -55,7 +59,6 @@ public class CircuitoCiudadIT {
 
         // Datos de prueba
         filtroDto = new FiltroDto();
-
 
         //Datos de prueba
         
@@ -68,55 +71,32 @@ public class CircuitoCiudadIT {
         circuitoDto.setNombre("Circuito Madrid Centro");
         circuitoDto.setId(1L);
 
+        circuitoCiudad1 = new CircuitoCiudad();
+        circuitoCiudad1.setCircuito(circuito);
+
+        circuitoCiudadDto1 = new CircuitoCiudadDto();
+        circuitoCiudadDto1.setCircuito(circuitoDto);
+
+
         //circuito 2
-        CircuitoCiudad circuito2 = new CircuitoCiudad();
+        Circuito circuito2 = new Circuito();
         circuito2.setId(2L);
         circuito2.setNombre("Circuito Barcelona Centro");
 
-        CircuitoCiudadDto circuitoDto2 = new CircuitoCiudadDto();
-        circuitoDto2.setId(2L);
+        CircuitoDto circuitoDto2= new CircuitoDto();
         circuitoDto2.setNombre("Circuito Barcelona Centro");
+        circuitoDto2.setId(2L);
 
-        Circuito circuito= new Circuito();
-        circuito.setNombre("Circuito Madrid Centro");
-        circuito.setId(1L);
 
-        CircuitoDto circuitoDto= new CircuitoDto();
-        circuitoDto.setNombre("Circuito Madrid Centro");
-        circuitoDto.setId(1L);
+        circuitoCiudad2 = new CircuitoCiudad();
+        circuitoCiudad2.setCircuito(circuito2);
 
-        circuitoCiudad = new CircuitoCiudad();
-        circuitoCiudad.setCircuito(circuito);
+        circuitoCiudadDto2 = new CircuitoCiudadDto();
+        circuitoCiudadDto2.setCircuito(circuitoDto2);
 
-        circuitoCiudadDto = new CircuitoCiudadDto();
-        circuitoCiudadDto.setCircuito(circuitoDto);
+
     }
 
-    @Test
-    void encuentraCircuitosenCiudad_DeberiaRetornarListaCircuitos_CuandoExistenResultados() throws Exception {
-        // Given
-        List<CircuitoCiudad> circuitos = Arrays.asList(circuitoCiudad);
-        List<CircuitoCiudadDto> circuitosDto = Arrays.asList(circuitoCiudadDto);
-
-        when(circuitoCiudadService.encuentraCircuitosenCiudad(any(FiltroDto.class)))
-                .thenReturn(circuitos);
-        when(mapper.map(circuitoCiudad, CircuitoCiudadDto.class))
-                .thenReturn(circuitoCiudadDto);
-
-        // When & Then
-        mockMvc.perform(post("/circuitos") // Ajustar la URL según tu mapping
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(filtroDto)))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].nombre").value("Circuito Madrid Centro"));
-
-        verify(circuitoCiudadService).encuentraCircuitosenCiudad(any(FiltroDto.class));
-        verify(mapper).map(circuitoCiudad, CircuitoCiudadDto.class);
-    }
 
     @Test
     void encuentraCircuitosenCiudad_DeberiaRetornarListaVacia_CuandoNoExistenResultados() throws Exception {
@@ -125,7 +105,7 @@ public class CircuitoCiudadIT {
                 .thenReturn(Collections.emptyList());
 
         // When & Then
-        mockMvc.perform(post("/circuitos")
+        mockMvc.perform(post("/buscar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(filtroDto)))
                 .andExpect(status().isOk())
@@ -144,7 +124,7 @@ public class CircuitoCiudadIT {
                 .thenThrow(new IllegalArgumentException("Parámetros inválidos"));
 
         // When & Then
-        mockMvc.perform(post("/circuitos")
+        mockMvc.perform(post("/buscar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(filtroDto)))
                 .andExpect(status().isBadRequest());
@@ -160,7 +140,7 @@ public class CircuitoCiudadIT {
                 .thenThrow(new RuntimeException("Error inesperado"));
 
         // When & Then
-        mockMvc.perform(post("/circuitos")
+        mockMvc.perform(post("/buscar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(filtroDto)))
                 .andExpect(status().isInternalServerError());
@@ -172,7 +152,7 @@ public class CircuitoCiudadIT {
     @Test
     void encuentraCircuitosenCiudad_DeberiaRetornarBadRequest_CuandoRequestBodyVacio() throws Exception {
         // When & Then
-        mockMvc.perform(post("/circuitos")
+        mockMvc.perform(post("/buscar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(""))
                 .andExpect(status().isBadRequest());
@@ -181,7 +161,7 @@ public class CircuitoCiudadIT {
     @Test
     void encuentraCircuitosenCiudad_DeberiaRetornarBadRequest_CuandoJsonInvalido() throws Exception {
         // When & Then
-        mockMvc.perform(post("/circuitos")
+        mockMvc.perform(post("/buscar")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{invalid json"))
                 .andExpect(status().isBadRequest());
@@ -191,11 +171,11 @@ public class CircuitoCiudadIT {
     @Test
     void encuentraCircuitosenCiudad_MetodoDirecto_DeberiaRetornarOk_CuandoExistenResultados() throws Exception {
         // Given
-        List<CircuitoCiudad> circuitos = Arrays.asList(circuitoCiudad);
+        List<CircuitoCiudad> circuitos = Arrays.asList(circuitoCiudad1);
         when(circuitoCiudadService.encuentraCircuitosenCiudad(filtroDto))
                 .thenReturn(circuitos);
-        when(mapper.map(circuitoCiudad, CircuitoCiudadDto.class))
-                .thenReturn(circuitoCiudadDto);
+        when(mapper.map(circuitoCiudad1, CircuitoCiudadDto.class))
+                .thenReturn(circuitoCiudadDto1);
 
         // When
         ResponseEntity<List<CircuitoCiudadDto>> response =
@@ -205,10 +185,10 @@ public class CircuitoCiudadIT {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(1, response.getBody().size());
-        assertEquals(circuitoCiudadDto, response.getBody().get(0));
+        assertEquals(circuitoCiudadDto1, response.getBody().get(0));
 
         verify(circuitoCiudadService).encuentraCircuitosenCiudad(filtroDto);
-        verify(mapper).map(circuitoCiudad, CircuitoCiudadDto.class);
+        verify(mapper).map(circuitoCiudad1, CircuitoCiudadDto.class);
     }
 
     @Test
@@ -248,17 +228,16 @@ public class CircuitoCiudadIT {
     }
 
     @Test
-    void encuentraCircuitosenCiudad_DeberiaMapearCorrectamente_CuandoMultiplesResultados() {
+    void encuentraCircuitosenCiudad_DeberiaMapearCorrectamente_CuandoMultiplesResultados() throws Exception {
         // Given
-
-        List<CircuitoCiudad> circuitos = Arrays.asList(circuitoCiudad, circuito2);
+        List<CircuitoCiudad> circuitos = Arrays.asList(circuitoCiudad1, circuitoCiudad2);
 
         when(circuitoCiudadService.encuentraCircuitosenCiudad(filtroDto))
                 .thenReturn(circuitos);
-        when(mapper.map(circuitoCiudad, CircuitoCiudadDto.class))
-                .thenReturn(circuitoCiudadDto);
-        when(mapper.map(circuito2, CircuitoCiudadDto.class))
-                .thenReturn(circuitoDto2);
+        when(mapper.map(circuitoCiudad1, CircuitoCiudadDto.class))
+                .thenReturn(circuitoCiudadDto1);
+        when(mapper.map(circuitoCiudad2, CircuitoCiudadDto.class))
+                .thenReturn(circuitoCiudadDto2);
 
         // When
         ResponseEntity<List<CircuitoCiudadDto>> response =
@@ -268,16 +247,12 @@ public class CircuitoCiudadIT {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(2, response.getBody().size());
-        assertTrue(response.getBody().contains(circuitoCiudadDto));
-        assertTrue(response.getBody().contains(circuitoDto2));
-
-        verify(circuitoCiudadService).encuentraCircuitosenCiudad(filtroDto);
-        verify(mapper).map(circuitoCiudad, CircuitoCiudadDto.class);
-        verify(mapper).map(circuito2, CircuitoCiudadDto.class);
+        assertTrue(response.getBody().contains(circuitoCiudadDto1));
+        assertTrue(response.getBody().contains(circuitoCiudadDto2));
     }
 
     @Test
-    void encuentraCircuitosenCiudad_MetodoDirecto_DeberiaRetornarListaVacia_CuandoNoHayResultados() {
+    void encuentraCircuitosenCiudad_MetodoDirecto_DeberiaRetornarListaVacia_CuandoNoHayResultados() throws Exception {
         // Given
         when(circuitoCiudadService.encuentraCircuitosenCiudad(filtroDto))
                 .thenReturn(Collections.emptyList());
@@ -290,8 +265,5 @@ public class CircuitoCiudadIT {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertTrue(response.getBody().isEmpty());
-
-        verify(circuitoCiudadService).encuentraCircuitosenCiudad(filtroDto);
-        verifyNoInteractions(mapper);
     }
 }

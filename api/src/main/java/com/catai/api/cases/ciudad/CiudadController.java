@@ -30,7 +30,7 @@ public class CiudadController {
      *
      * @return list de {@link CiudadDto}
      */
-    @RequestMapping(path = "", method = RequestMethod.POST)
+    @RequestMapping(path = "", method = RequestMethod.GET)
     public List<CiudadDto> TodasCiudades() {
         List<Ciudad> lista = this.ciudadService.getTodasCiudades();
 
