@@ -1,6 +1,7 @@
 package com.catai.api.cases.extension.model;
 
 import com.catai.api.cases.circuito.model.Circuito;
+import com.catai.api.cases.circuito.model.CircuitoDto;
 import jakarta.persistence.*;
 
 /**
@@ -41,6 +42,67 @@ public class Extension {
 
 
 
+    //GETTERS & SETTERS
+
+
+    /**
+     * Obtiene el identificador único de la extensión.
+     *
+     * @return el identificador unico de la extensión
+     */
+    public long getId() {
+        return id;
+    }
+
+
+    /**
+     * Establece el identificador único de la extensión.
+     *
+     * @param id el ID a asignar a la extensión
+     */
+    public void setId(long id) {
+        this.id = id;
+    }
+
+
+    /**
+     * Obtiene el circuito asociado a la extensión.
+     *
+     * @return el circuito asociado a la extensión
+     */
+    public Circuito getCircuito() {
+        return circuito;
+    }
+
+
+    /**
+     * Establece el circuito asociado a la extensión.
+     *
+     * @param circuito el circuito asociado a la extensión
+     */
+    public void setCircuito(Circuito circuito) {
+        this.circuito = circuito;
+    }
+
+
+    /**
+     * Obtiene el nombre de la extensión.
+     *
+     * @return el nombre de la extensión
+     */
+    public String getNombre() {
+        return nombre;
+    }
+
+
+    /**
+     * Establece el nombre de la extensión
+     *
+     * @param nombre el nombre a asignar a la extensión.
+     */
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
 
 }
