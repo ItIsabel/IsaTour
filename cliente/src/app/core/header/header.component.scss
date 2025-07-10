@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+// Header container styles
+.header_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 100%;
+  padding: 15px;
+  background-color: transparent;
+  font-family: 'Inter';
+  margin-inline: auto;
+  color: #ffffff;
+
+}
+
+// Header title styles
+.header_title {
+  margin-top: 1rem;
+  font-size: 2.5rem;
+  font-weight: 750;
+}
+
+
+// Header menu container
+.header_menu {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  margin-left: 2rem;
+  align-items: center;
+  justify-items: center;
+}
+
+// Header button container
+.header_button {
+  a {
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    
+    // Hover effect with underline
+    &:hover {
+      text-decoration: underline;
+      text-decoration-color: #ea5153;
+      text-underline-offset: 0.7rem;
+      text-decoration-thickness: 2px;
+    }
+    
+  }
+}
+
+
+// Responsive design
+@media (max-width: 768px) {
+  .header_container {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .header_separator {
+    display: none;
+  }
+  
+  .header_menu {
+    margin-left: 0;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  
+  .header_button a {
+    padding: 12px 0;
+    width: 100%;
+  }
+}
