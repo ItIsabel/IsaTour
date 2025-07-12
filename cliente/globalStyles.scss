@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+html{     
+   background-image: url(./media/background.png);
+
+
+}
+:host {
+      display: block;
+      min-height: 100vh;
+    }
+    
+    .main-content {
+      background-color: white;
+      min-height: calc(100vh - 70px);
+    }
+    
+    .page {
+      display: none;
+    }
+    
+    .page.active {
+      display: block;
+    }

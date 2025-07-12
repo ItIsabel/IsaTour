@@ -39,7 +39,7 @@ public class ExtensionController {
     @RequestMapping(path = {"","/{id}"}, method = {RequestMethod.POST})
     public List<ExtensionDto> extensionesDeCircuito(
         @PathVariable("id") long circuitoId) {
-        List<Extension> lista = this.extensionService.getExtensionesByCircuito(circuitoId);
+        List<Extension> lista = this.extensionService.getExtensionesByCircuitoId(circuitoId);
 
         return lista.stream().map(e -> mapper.map(e, ExtensionDto.class)).collect(Collectors.toList());
     }

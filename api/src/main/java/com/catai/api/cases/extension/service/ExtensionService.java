@@ -16,5 +16,5 @@ public interface ExtensionService {
      *
      * @return Un List de {@link  Extension} .
      */
-    public List<Extension> getExtensionesByCircuito(Long circuitoID);
+    public List<Extension> getExtensionesByCircuitoId(Long circuitoID);
 }

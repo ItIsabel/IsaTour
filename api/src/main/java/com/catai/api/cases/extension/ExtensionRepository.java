@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface ExtensionRepository extends JpaRepository<Extension, Long> {
     @EntityGraph(attributePaths = {"circuito"})
-    public List<Extension> findByCircuito();
+    public List<Extension> findByCircuitoId(long circuitoID);
 }
