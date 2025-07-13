@@ -42,12 +42,6 @@ public class CircuitoCiudad {
     @JoinColumn(name = "ciudad_id")
     private Ciudad ciudad;
 
-    /**
-     * Orden de visita de la ciudad dentro del circuito turístico.
-     * Permite establecer la secuencia en la que se deben visitar las ciudades.
-     */
-    @Column(name = "orden_ciudad")
-    private Integer ordenCiudad;
 
 
 
@@ -114,22 +108,4 @@ public class CircuitoCiudad {
     }
 
 
-    /**
-     * Obtiene el orden de visita de la ciudad dentro del circuito.
-     *
-     * @return el orden numérico de la ciudad en el circuito
-     */
-    public Integer getOrdenCiudad() {
-        return ordenCiudad;
-    }
-
-
-    /**
-     * Establece el orden de visita de la ciudad dentro del circuito.
-     *
-     * @param ordenCiudad el orden numérico a asignar (ej: 1 para primera ciudad)
-     */
-    public void setOrdenCiudad(Integer ordenCiudad) {
-        this.ordenCiudad = ordenCiudad;
-    }
 }

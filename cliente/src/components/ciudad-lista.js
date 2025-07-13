@@ -141,7 +141,12 @@ export class PageCities extends LitElement {
     ciudadesFiltradas: { type: Array },
     loading: { type: Boolean },
     error: { type: String },
-    searchTerm: { type: String }
+    searchTerm: { type: String },
+    showDialog: { type: Boolean },
+    selectedCiudad: { type: Object },
+    circuitos: { type: Array },
+    loadingCircuitos: { type: Boolean },
+    errorCircuitos: { type: String }
   };
 
   constructor() {
@@ -151,6 +156,11 @@ export class PageCities extends LitElement {
     this.loading = false;
     this.error = '';
     this.searchTerm = '';
+    this.showDialog = false;
+    this.selectedCiudad = null;
+    this.circuitos = [];
+    this.loadingCircuitos = false;
+    this.errorCircuitos = '';
   }
 
   async connectedCallback() {
@@ -187,13 +197,32 @@ export class PageCities extends LitElement {
     }
   }
 
-  handleCityClick(ciudad) {
-    // Enviar evento para navegar a la página de búsqueda con la ciudad seleccionada
-    this.dispatchEvent(new CustomEvent('city-selected', {
-      detail: { ciudad },
-      bubbles: true,
-      composed: true
-    }));
+  async loadCircuitosForCiudad(ciudad) {
+    this.loadingCircuitos = true;
+    this.errorCircuitos = '';
+    this.circuitos = [];
+    try {
+      const filtroDto = { nombreCiudad: ciudad.nombre, idCircuito: 0 };
+      const response = await ciudadService.fetchCircuitos(filtroDto);
+      this.circuitos = response.map(item => item.circuito);
+    } catch (error) {
+      this.errorCircuitos = 'Error al cargar circuitos para la ciudad.';
+    } finally {
+      this.loadingCircuitos = false;
+    }
+  }
+
+  async handleCityClick(ciudad) {
+    this.selectedCiudad = ciudad;
+    await this.loadCircuitosForCiudad(ciudad);
+    this.showDialog = true;
+  }
+
+  closeDialog() {
+    this.showDialog = false;
+    this.selectedCiudad = null;
+    this.circuitos = [];
+    this.errorCircuitos = '';
   }
 
   render() {
@@ -233,24 +262,83 @@ export class PageCities extends LitElement {
         <div class="stats-label">ciudades encontradas</div>
       </div>
 
-      <div class="cities-grid">
+      <div class="cities-list-grid">
         ${this.ciudadesFiltradas.length > 0 ? 
           this.ciudadesFiltradas.map(ciudad => html`
-            <div class="city-card" @click="${() => this.handleCityClick(ciudad)}">
-              <div class="city-icon">🏙️</div>
-              <div class="city-name">${ciudad.nombre}</div>
-              <div class="city-id">ID: ${ciudad.id}</div>
+            <div class="city-name-item" @click="${() => this.handleCityClick(ciudad)}">
+              ${ciudad.nombre}
             </div>
           `) : 
           html`
             <div class="no-cities">
-              No se encontraron ciudades con el término de búsqueda.
+              No se encontraron ciudades.
             </div>
           `
         }
       </div>
+
+      ${this.showDialog ? html`
+        <dialog open style="all: unset; display: block; position: fixed; top: 10%; left: 10%; width: 80%; max-height: 80%; overflow: auto; background: white; border: 1px solid #ccc; border-radius: 8px; padding: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000;">
+          <h2>Circuitos en ${this.selectedCiudad.nombre}</h2>
+          <button @click="${this.closeDialog}">Cerrar</button>
+          ${this.loadingCircuitos ? html`<p>Cargando circuitos...</p>` : ''}
+          ${this.errorCircuitos ? html`<p class="error">${this.errorCircuitos}</p>` : ''}
+          ${this.circuitos.length > 0 ? html`
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>País</th>
+                  <th>Días</th>
+                  <th>Precio</th>
+                  <th>URL</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${this.circuitos.map(circuito => html`
+                  <tr>
+                    <td>${circuito.nombre}</td>
+                    <td>${circuito.pais}</td>
+                    <td>${circuito.dias}</td>
+                    <td>
+                      ${circuito.precio?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) ?? 'N/A'}
+                    </td>
+                    <td>
+                      ${circuito.url ? html`<a href="${circuito.url}" target="_blank" rel="noopener noreferrer">🔗</a>` : ''}
+                    </td>
+                  </tr>
+                `)}
+              </tbody>
+            </table>
+          ` : html`<p>No hay circuitos disponibles para esta ciudad.</p>`}
+        </dialog>
+      ` : ''}
     `;
+
   }
+
+  static styles = [
+    PageCities.styles,
+    css`
+      .cities-list-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+      }
+      .city-name-item {
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-align: center;
+        cursor: pointer;
+        background: white;
+        transition: background-color 0.2s ease;
+      }
+      .city-name-item:hover {
+        background-color: #f0f0f0;
+      }
+    `
+  ];
 }
 
 customElements.define('page-cities', PageCities);

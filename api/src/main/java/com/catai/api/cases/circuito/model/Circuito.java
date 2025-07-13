@@ -54,6 +54,12 @@ public class Circuito {
     @Column(name = "url")
     private String url;
 
+    /**
+     * Touroperador asociado al circuito.
+     */
+    @Column(name = "touroperador")
+    private String touroperador;
+
 
 
     //GETTERS & SETTERS
@@ -177,5 +183,13 @@ public class Circuito {
      */
     public void setPais(String pais) {
         this.pais = pais;
+    }
+
+    public String getTouroperador() {
+        return touroperador;
+    }
+
+    public void setTouroperador(String touroperador) {
+        this.touroperador = touroperador;
     }
 }

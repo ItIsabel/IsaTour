@@ -41,7 +41,7 @@ export class MyApp extends LitElement {
             case 'ciudades':
                 this.currentView = 'ciudades';
                 break;
-            case 'buscars':
+            case 'buscar':
                 this.currentView = 'buscar';
                 break;
             default:

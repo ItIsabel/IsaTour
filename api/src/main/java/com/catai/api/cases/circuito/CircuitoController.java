@@ -34,8 +34,11 @@ public class CircuitoController {
      * @return list de {@link CircuitoDto}
      */
     @RequestMapping(path = "", method = RequestMethod.GET)
-    public List<CircuitoDto> TodosCircuitos() {
-        List<Circuito> lista = this.circuitoService.getTodosLosCircuitos();
+    public List<CircuitoDto> TodosCircuitos(
+            @RequestParam(required = false) Integer dias,
+            @RequestParam(required = false) String touroperador) {
+
+        List<Circuito> lista = this.circuitoService.getCircuitosFiltrados(dias, touroperador);
 
         return lista.stream().map(e -> mapper.map(e, CircuitoDto.class)).collect(Collectors.toList());
     }

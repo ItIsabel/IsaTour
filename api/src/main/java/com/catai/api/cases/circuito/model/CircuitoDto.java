@@ -42,6 +42,10 @@ public class CircuitoDto {
      */
     private String url;
 
+    /**
+     * Touroperador asociado al circuito.
+     */
+    private String touroperador;
 
 
     //GETTERS & SETTERS
@@ -165,5 +169,14 @@ public class CircuitoDto {
      */
     public void setPrecio(float precio) {
         this.precio = precio;
+    }
+
+
+    public String getTouroperador() {
+        return touroperador;
+    }
+
+    public void setTouroperador(String touroperador) {
+        this.touroperador = touroperador;
     }
 }

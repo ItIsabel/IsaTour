@@ -106,12 +106,6 @@ export class AppHeader extends LitElement {
             >
               LISTADO DE CIUDADES
             </button>
-            <button 
-              class="header__button ${this.currentPage === 'buscar' ? 'active' : ''}"
-              @click="${() => this._navigateTo('buscar')}"
-            >
-              BUSCAR CIRCUITOS POR CIUDAD
-            </button>
           </nav>
         </div>
       </header>
