@@ -104,7 +104,7 @@ export class PageCities extends LitElement {
 
     return html`
       <div class="header">
-        <h1>Ciudades Disponibles</h1>
+        <h1>Ciudades con circuitos</h1>
       </div>
 
       ${this.error ? html`
@@ -143,9 +143,9 @@ export class PageCities extends LitElement {
       </div>
 
       ${this.showDialog ? html`
-        <dialog open style="all: unset; display: block; position: fixed; top: 10%; left: 10%; width: 80%; max-height: 80%; overflow: auto; background: white; border: 1px solid #ccc; border-radius: 8px; padding: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 1000;">
+        <dialog open class="ciudad-dialog">
           <h2>Circuitos en ${this.selectedCiudad.nombre}</h2>
-          <button @click="${this.closeDialog}">Cerrar</button>
+          <button class="popup-close-button" @click="${this.closeDialog}" aria-label="Cerrar popup">×</button>
           ${this.loadingCircuitos ? html`<p>Cargando circuitos...</p>` : ''}
           ${this.errorCircuitos ? html`<p class="error">${this.errorCircuitos}</p>` : ''}
           ${this.circuitos.length > 0 ? html`
@@ -179,31 +179,7 @@ export class PageCities extends LitElement {
         </dialog>
       ` : ''}
     `;
-
   }
-
-  static styles = [
-    PageCities.styles,
-    css`
-      .cities-list-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-      }
-      .city-name-item {
-        padding: 0.5rem;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-        text-align: center;
-        cursor: pointer;
-        background: white;
-        transition: background-color 0.2s ease;
-      }
-      .city-name-item:hover {
-        background-color: #f0f0f0;
-      }
-    `
-  ];
 }
 
 customElements.define('page-cities', PageCities);

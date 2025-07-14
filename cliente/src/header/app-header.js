@@ -12,6 +12,7 @@ export class AppHeader extends LitElement {
   constructor() {
     super();
     this.currentPage = 'home';
+    document.documentElement.classList.add('dark-mode');
   }
 
   render() {
@@ -42,7 +43,7 @@ export class AppHeader extends LitElement {
 
   _handleLogoClick(e) {
     e.preventDefault();
-    this._navigateTo('circuitos');
+    document.documentElement.classList.toggle('dark-mode');
   }
 
   _navigateTo(page) {

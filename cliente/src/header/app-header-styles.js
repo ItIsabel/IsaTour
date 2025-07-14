@@ -1,23 +1,10 @@
 import { css } from 'lit';
 
 export const Styles = css`
-/* Reset y variables CSS */
-:root {
-  --primary-color: #2c3e50;
-  --secondary-color: #3498db;
-  --accent-color: #e74c3c;
-  --text-color: #2c3e50;
-  --light-gray: #ecf0f1;
-  --white: #ffffff;
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  --border-radius: 8px;
-  --transition: all 0.3s ease;
-}
 
 /* Estilos del header */
 .header {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, #754ca3 20%);
-
+  background: linear-gradient(135deg, var(--primary-color) 60%, var(--secondary-color) 115%);
   border-bottom: 1px solid transparent;
   box-shadow: none;
   position: sticky;
@@ -28,12 +15,6 @@ export const Styles = css`
   backdrop-filter: blur(0px);
 }
 
-/* Header con scroll */
-.header.scrolled {
-  border-bottom: 1px solid rgba(52, 152, 219, 0.1);
-  box-shadow: var(--shadow);
-  backdrop-filter: blur(10px);
-}
 
 .header__container {
   max-width: 1200px;
@@ -49,7 +30,7 @@ export const Styles = css`
 .header__logo {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--white);
   text-decoration: none;
   letter-spacing: -0.5px;
   transition: var(--transition);
@@ -144,8 +125,9 @@ export const Styles = css`
 }
 
 .header__logo:focus {
-  outline: 2px solid var(--accent-color);
-  outline-offset: 2px;
+  /* outline removed as per request */
+  outline: none;
+  outline-offset: 0;
   border-radius: 4px;
 }
 

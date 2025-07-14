@@ -1,20 +1,9 @@
 import { css } from 'lit';
 
 export const Styles = css`
-  :root {
-  --primary-color: #2c3e50;
-  --secondary-color: #3498db;
-  --accent-color: #e74c3c;
-  --text-color: #2c3e50;
-  --light-gray: #ecf0f1;
-  --white: #ffffff;
-  --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  --border-radius: 8px;
-  --transition: all 0.3s ease;
-}
 
   .header {
-  background: linear-gradient(135deg, var(--white) 0%, var(--light-gray) 100%);
+  background: var(--white);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow);
   padding: 2rem;
@@ -25,6 +14,11 @@ export const Styles = css`
   gap: 1.5rem;
   align-items: center;
 }
+
+.dark-mode .header {
+  background: var(--white);
+}
+
 
 .header h1 {
   grid-column: 1 / 2;
@@ -48,7 +42,7 @@ export const Styles = css`
   gap: 1.5rem;
   align-items: center;
   padding: 1rem;
-  background: linear-gradient(135deg, #677de8, #754ca3);
+  background: linear-gradient(90deg, var(--white) 0%, rgba(52, 152, 219, 0.5) 50%, var(--white) 100%);
   border-radius: 8px;
   border:0.5rem;
   margin-bottom: 1.5rem;
@@ -57,6 +51,9 @@ export const Styles = css`
 .filter-item {
   display: flex;
   flex-direction: column;
+}
+.filter-item.label{
+padding:0.4rem
 }
 
 /* Estilos para labels */
@@ -137,7 +134,7 @@ table th[style*="cursor:pointer"] {
 }
 
 table th[style*="cursor:pointer"]:hover {
-  background: rgba(164, 224, 242, 0.59);
+  background: rgba(18, 124, 156, 0.59);
 }
 
 table tbody tr {
@@ -146,7 +143,7 @@ table tbody tr {
 }
 
 table tbody tr:hover {
-  background: rgba(52, 152, 219, 0.13);
+  background: rgba(52, 152, 219, 0.5);
 }
 
 table tbody tr:last-child {
@@ -169,7 +166,7 @@ table td a {
   display: inline-block;
 }
 
-table td a:hover {
+table td :hover {
   color: var(--accent-color);
   transform: scale(1.1);
 }
@@ -226,7 +223,23 @@ table td button:disabled {
   overflow-y: auto;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   animation: slideIn 0.3s ease-out;
+  position: relative;
 }
+
+.popup-close-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: var(--primary-color);
+  transition: color 0.3s ease;
+}
+
+.popup-close-button:hover {
 
 .popup-content h3 {
   color: var(--primary-color);

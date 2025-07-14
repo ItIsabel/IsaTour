@@ -9,14 +9,11 @@ export class PageCircuits extends LitElement {
     circuitos: { type: Array },
     loading: { type: Boolean },
     error: { type: String },
-    loadingExtensions: { type: Object },
     sortBy: { type: String },
     sortOrder: { type: String },
     filterPais: { type: String },
     filterDias: { type: Number },
-    filterTouroperador: { type: String },
-    showExtensionsPopup: { type: Boolean },
-    currentExtensions: { type: Array }
+    filterTouroperador: { type: String }
   };
 
   constructor() {
@@ -120,8 +117,7 @@ export class PageCircuits extends LitElement {
     return html`
       <div class="header">
         <h1>Circuitos Disponibles</h1>
-
-        <div class="filters-container" style="min-height: 80px;">
+        <div class="filters-container">
           <div class="filter-item">
             <label for="pais-filter">Filtrar por País:</label>
             <select id="pais-filter" @change="${this.handleFilterChange}">
@@ -175,7 +171,6 @@ export class PageCircuits extends LitElement {
               ${this.sortBy === 'precio' ? (this.sortOrder === 'asc' ? '▲' : '▼') : ''}
             </th>
             <th>URL</th>
-            <th>Extensiones</th>
           </tr>
         </thead>
         <tbody>
@@ -190,34 +185,24 @@ export class PageCircuits extends LitElement {
                   <a href="${circuito.url}" target="_blank" rel="noopener noreferrer" title="Ver más información">🔗</a>
                 ` : ''}
               </td>
-              <td>
-                ${circuito.extensiones && circuito.extensiones.length > 0 ? html`
-                  <button 
-                    @click="${() => this.loadExtensiones(circuito.id)}"
-                    ?disabled="${this.loadingExtensions[circuito.id]}"
-                  >
-                    ${this.loadingExtensions[circuito.id] ? 'Cargando...' : 'Ver Extensiones'}
-                  </button>
-                ` : ''}
-              </td>
             </tr>
           `)}
         </tbody>
       </table>
 
-      ${this.showExtensionsPopup ? html`
-        <div class="popup-overlay" @click="${this.closeExtensionsPopup}">
-          <div class="popup-content" @click="${e => e.stopPropagation()}">
-            <h3>Extensiones</h3>
-            <ul>
-              ${this.currentExtensions.map(extension => html`
-                <li>${extension.nombre}</li>
-              `)}
-            </ul>
-            <button @click="${this.closeExtensionsPopup}">Cerrar</button>
-          </div>
+    ${this.showExtensionsPopup ? html`
+      <div class="popup-overlay" @click="${this.closeExtensionsPopup}">
+        <div class="popup-content" @click="${e => e.stopPropagation()}">
+          <h3>Extensiones</h3>
+          <ul>
+            ${this.currentExtensions.map(extension => html`
+              <li>${extension.nombre}</li>
+            `)}
+          </ul>
+          <button class="popup-close-button" @click="${this.closeExtensionsPopup}" aria-label="Cerrar popup">×</button>
         </div>
-      ` : ''}
+      </div>
+    ` : ''}
     `;
   }
 
