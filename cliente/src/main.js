@@ -1,7 +1,6 @@
-import './components/app-header.js';
-import './components/circuito-lista.js';
-import './components/ciudad-lista.js';
-import './components/buscar.js';
+import './header/app-header.js';
+import './circuito/circuito-lista.js';
+import './ciudad/ciudad-lista.js';
 
 // Importar el componente principal al final
 import './app.js';
@@ -16,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'app-header', 
         'page-circuits',
         'page-cities',
-        'buscar-circuitos'
     ];
     
     elements.forEach(elementName => {

@@ -1,3 +1,6 @@
+import { css } from 'lit';
+
+export const Styles = css`
     :host {
       display: block;
       padding: 2rem;
@@ -129,3 +132,4 @@
       color: #666;
       font-size: 0.9rem;
     }
+  `

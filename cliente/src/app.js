@@ -1,6 +1,6 @@
 import { LitElement, html, css } from 'lit';
-import './components/app-header.js';
-import './components/ciudad-lista.js';
+import './header/app-header.js';
+import './ciudad/ciudad-lista.js';
 
 export class MyApp extends LitElement {
     static styles = css`
@@ -41,9 +41,6 @@ export class MyApp extends LitElement {
             case 'ciudades':
                 this.currentView = 'ciudades';
                 break;
-            case 'buscar':
-                this.currentView = 'buscar';
-                break;
             default:
                 this.currentView = 'circuitos';
         }
@@ -57,9 +54,6 @@ export class MyApp extends LitElement {
                 break;
             case 'ciudades':
                 this.currentView = 'ciudades';
-                break;
-            case 'buscar':
-                this.currentView = 'buscar';
                 break;
             default:
                 this.currentView = 'circuitos';
@@ -84,8 +78,6 @@ export class MyApp extends LitElement {
                 return 'home';
             case 'ciudades':
                 return 'about';
-            case 'buscar':
-                return 'circuits';
             default:
                 return 'home';
         }
@@ -97,12 +89,20 @@ export class MyApp extends LitElement {
                 return html`<page-circuits></page-circuits>`;
             case 'ciudades':
                 return html`<page-cities></page-cities>`;
-            case 'buscar':
-                return html`<buscar-circuitos></buscar-circuitos>`;
             default:
                 return html`<page-circuits></page-circuits>`;
         }
     }
 }
+
+window.addEventListener('scroll', () => {
+  const header = document.querySelector('.header');
+  if (!header) return;
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+});
 
 customElements.define('my-app', MyApp);
