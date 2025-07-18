@@ -7,11 +7,17 @@ WORKDIR /app
 # Copiar archivos de dependencias
 COPY package*.json ./
 
-# Instalar dependencias (usar --omit=dev en lugar de --only=production)
-RUN npm ci --omit=dev
+# Establecer NODE_ENV para producción
+ENV NODE_ENV=production
+
+# Instalar dependencias
+RUN npm ci
 
 # Copiar el resto de los archivos de la aplicación
 COPY . .
+
+# Verificar que los archivos se copiaron correctamente
+RUN ls -la /app
 
 # Crear un usuario no-root para mayor seguridad
 RUN addgroup -g 1001 -S nodejs
