@@ -15,7 +15,7 @@ RUN chmod +x mvnw
 RUN ./mvnw dependency:resolve
 
 # Copy source code
-COPY src ./src
+COPY ./src
 
 # Build the application
 RUN ./mvnw clean package -DskipTests
