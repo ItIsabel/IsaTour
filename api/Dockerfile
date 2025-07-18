@@ -1,24 +1,28 @@
-# Stage 1: Build the application
-# Use a Maven image that includes JDK
-FROM maven:3.9.6-eclipse-temurin-17-alpine AS build
+# Usar una imagen base de Node.js LTS
+FROM node:18-alpine
 
+# Establecer el directorio de trabajo
 WORKDIR /app
-# Copy your project files into the /app directory
+
+# Copiar archivos de dependencias
+COPY package*.json ./
+
+# Instalar dependencias
+RUN npm ci --only=production
+
+# Copiar el resto de los archivos de la aplicación
 COPY . .
-# Make sure mvnw is executable (often not strictly needed if it already has permissions locally)
-RUN chmod +x ./mvnw
-# Run the Maven build command
-RUN ./mvnw clean package -DskipTests
 
-# ---
+# Crear un usuario no-root para mayor seguridad
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nextjs -u 1001
 
-# Stage 2: Create the final lightweight runtime image
-# Use a JRE-only image for smaller size
-FROM eclipse-temurin:17-jre-alpine
+# Cambiar la propiedad de los archivos al usuario no-root
+RUN chown -R nextjs:nodejs /app
+USER nextjs
 
-WORKDIR /app
-# Copy only the built JAR file from the 'build' stage
-COPY --from=build /app/target/*.jar app.jar
+# Exponer el puerto (Render asignará automáticamente el puerto)
+EXPOSE 3000
 
-# Define the command to run your application when the container starts
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# Comando para ejecutar la aplicación
+CMD ["npm", "start"]
