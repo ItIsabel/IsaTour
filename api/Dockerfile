@@ -1,28 +1,36 @@
-# Usar una imagen base de Node.js LTS
-FROM node:18-alpine
+# Use OpenJDK 21 as base image (matching your pom.xml java.version)
+FROM openjdk:21-jdk-slim
 
-# Establecer el directorio de trabajo
+# Set working directory
 WORKDIR /app
 
-# Copiar archivos de dependencias
-COPY package*.json ./
+# Copy Maven wrapper and pom.xml first for better caching
+COPY mvnw mvnw.cmd pom.xml ./
+COPY .mvn .mvn
 
-# Instalar dependencias
-RUN npm ci --only=production
+# Make Maven wrapper executable
+RUN chmod +x mvnw
 
-# Copiar el resto de los archivos de la aplicación
-COPY . .
+# Download dependencies (this layer will be cached if pom.xml doesn't change)
+RUN ./mvnw dependency:resolve
 
-# Crear un usuario no-root para mayor seguridad
-RUN addgroup -g 1001 -S nodejs
-RUN adduser -S nextjs -u 1001
+# Copy source code
+COPY src ./src
 
-# Cambiar la propiedad de los archivos al usuario no-root
-RUN chown -R nextjs:nodejs /app
-USER nextjs
+# Build the application
+RUN ./mvnw clean package -DskipTests
 
-# Exponer el puerto (Render asignará automáticamente el puerto)
-EXPOSE 3000
+# Create non-root user for security
+RUN groupadd -r spring && useradd -r -g spring spring
 
-# Comando para ejecutar la aplicación
-CMD ["npm", "start"]
+# Change ownership of the app directory
+RUN chown -R spring:spring /app
+
+# Switch to non-root user
+USER spring
+
+# Expose port 8080 (default for Spring Boot)
+EXPOSE 8080
+
+# Run the Spring Boot application
+CMD ["java", "-jar", "target/api-0.0.1-SNAPSHOT.jar"]
