@@ -68,7 +68,34 @@ export const Styles = css`
     background: #0056b3;
   }
 
-  .submit-button:active {
+  .linkedin-link {
+    text-align: center;
+    margin-top: 2rem;
+  }
+
+  .linkedin-link p {
+    font-size: 1.2rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+
+  .linkedin-link a {
+    display: inline-block;
+    background: #007bff;
+    color: white;
+    padding: 1rem 2rem;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+  }
+
+  .linkedin-link a:hover {
+    background: #0056b3;
+  }
+
+  .linkedin-link a:active {
     background: #004085;
   }
 
@@ -77,9 +104,18 @@ export const Styles = css`
       padding: 1rem;
       margin: 1rem;
     }
-    
+
     h1 {
       font-size: 2rem;
+    }
+
+    .linkedin-link p {
+      font-size: 1rem;
+    }
+
+    .linkedin-link a {
+      padding: 0.75rem 1.5rem;
+      font-size: 1rem;
     }
   }
 `;
