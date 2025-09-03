@@ -29,6 +29,11 @@ public class Ciudad {
     @Column (name="nombre")
     private String nombre;
 
+    /**
+     * Nombre del pais asociado a la ciudad.
+     */
+    @Column (name="pais")
+    private String pais;
 
 
     //GETTERS & SETTERS
@@ -72,4 +77,23 @@ public class Ciudad {
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
+    /**
+     * Obtiene el país asociado a la ciudad.
+     *
+     * @return el país.
+     */
+    public String getPais() {
+        return pais;
+    }
+
+
+    /**
+     * Establece el país asociado a la ciudad.
+     *
+     * @param pais el país.
+     */
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
 }
+

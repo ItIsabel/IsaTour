@@ -30,11 +30,7 @@ public class Circuito {
     @Column(name = "nombre")
     private String nombre;
 
-    /**
-     * País donde se desarrolla el circuito.
-     */
-    @Column(name = "pais")
-    private String pais;
+    
 
     /**
      * Duración del circuito en días.
@@ -166,24 +162,6 @@ public class Circuito {
     }
 
 
-    /**
-     * Obtiene el país donde se desarrolla el circuito.
-     *
-     * @return el país del circuito
-     */
-    public String getPais() {
-        return pais;
-    }
-
-
-    /**
-     * Establece el país donde se desarrolla el circuito.
-     *
-     * @param pais el país a asignar al circuito
-     */
-    public void setPais(String pais) {
-        this.pais = pais;
-    }
 
     public String getTouroperador() {
         return touroperador;

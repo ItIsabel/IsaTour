@@ -22,10 +22,6 @@ public class CircuitoDto {
      */
     private String nombre;
 
-    /**
-     * País donde se desarrolla el circuito.
-     */
-    private String pais;
 
     /**
      * Duración del circuito en días.
@@ -112,24 +108,6 @@ public class CircuitoDto {
     }
 
 
-    /**
-     * Obtiene el país donde se desarrolla el circuito.
-     *
-     * @return el país del circuito
-     */
-    public String getPais() {
-        return pais;
-    }
-
-
-    /**
-     * Establece el país donde se desarrolla el circuito.
-     *
-     * @param pais el país a asignar al circuito
-     */
-    public void setPais(String pais) {
-        this.pais = pais;
-    }
 
 
     /**

@@ -14,7 +14,9 @@ export class PageCities extends LitElement {
     selectedCiudad: { type: Object },
     circuitos: { type: Array },
     loadingCircuitos: { type: Boolean },
-    errorCircuitos: { type: String }
+    errorCircuitos: { type: String },
+    filterPais: { type: String },
+    countryList: { type: Array }
   };
 
   constructor() {
@@ -29,6 +31,8 @@ export class PageCities extends LitElement {
     this.circuitos = [];
     this.loadingCircuitos = false;
     this.errorCircuitos = '';
+    this.filterPais = '';
+    this.countryList = [];
   }
 
   async connectedCallback() {
@@ -42,6 +46,8 @@ export class PageCities extends LitElement {
       this.error = '';
       this.ciudades = await ciudadService.getCiudades();
       this.ciudadesFiltradas = [...this.ciudades];
+      // Generate country list from cities data
+      this.countryList = [...new Set(this.ciudades.map(ciudad => ciudad.pais))].filter(pais => pais != null).sort();
     } catch (error) {
       this.error = 'Error al cargar las ciudades. Por favor, intenta de nuevo.';
       console.error('Error loading cities:', error);
@@ -55,14 +61,30 @@ export class PageCities extends LitElement {
     this.filterCiudades();
   }
 
+  handleCountryFilterChange(e) {
+    this.filterPais = e.target.value;
+    this.filterCiudades();
+  }
+
   filterCiudades() {
-    if (!this.searchTerm) {
-      this.ciudadesFiltradas = [...this.ciudades];
-    } else {
-      this.ciudadesFiltradas = this.ciudades.filter(ciudad =>
+    let filtered = [...this.ciudades];
+
+    // Apply country filter
+    if (this.filterPais) {
+      filtered = filtered.filter(ciudad => ciudad.pais === this.filterPais);
+    }
+
+    // Apply search filter
+    if (this.searchTerm) {
+      filtered = filtered.filter(ciudad =>
         ciudad.nombre.toLowerCase().includes(this.searchTerm)
       );
     }
+
+    // Sort alphabetically by city name, case-insensitive
+    filtered.sort((a, b) => a.nombre.toLowerCase().localeCompare(b.nombre.toLowerCase()));
+
+    this.ciudadesFiltradas = filtered;
   }
 
   async loadCircuitosForCiudad(ciudad) {
@@ -93,6 +115,14 @@ export class PageCities extends LitElement {
     this.errorCircuitos = '';
   }
 
+  _navigateToContacto() {
+    this.dispatchEvent(new CustomEvent('page-change', {
+      detail: { page: 'contacto' },
+      bubbles: true,
+      composed: true
+    }));
+  }
+
   render() {
     if (this.loading) {
       return html`
@@ -105,6 +135,28 @@ export class PageCities extends LitElement {
     return html`
       <div class="header">
         <h1>Ciudades con circuitos</h1>
+        <div class="filters-container">
+          <div class="filter-item">
+            <label for="search-input">Buscar ciudades:</label>
+            <input
+              id="search-input"
+              type="text"
+              class="search-input"
+              placeholder="Buscar ciudades..."
+              @input="${this.handleSearch}"
+            >
+          </div>
+
+          <div class="filter-item">
+            <label for="country-filter">Filtrar por País:</label>
+            <select id="country-filter" @change="${this.handleCountryFilterChange}">
+              <option value="">-- Todos los países --</option>
+              ${this.countryList.map(pais => html`
+                <option value="${pais}" ?selected="${this.filterPais === pais}">${pais}</option>
+              `)}
+            </select>
+          </div>
+        </div>
       </div>
 
       ${this.error ? html`
@@ -112,15 +164,6 @@ export class PageCities extends LitElement {
           ${this.error}
         </div>
       ` : ''}
-
-      <div class="search-section">
-        <input 
-          type="text" 
-          class="search-input" 
-          placeholder="Buscar ciudades..."
-          @input="${this.handleSearch}"
-        >
-      </div>
 
       <div class="stats">
         <div class="stats-number">${this.ciudadesFiltradas.length}</div>
@@ -153,7 +196,6 @@ export class PageCities extends LitElement {
               <thead>
                 <tr>
                   <th>Nombre</th>
-                  <th>País</th>
                   <th>Días</th>
                   <th>Precio</th>
                   <th>URL</th>
@@ -163,7 +205,6 @@ export class PageCities extends LitElement {
                 ${this.circuitos.map(circuito => html`
                   <tr>
                     <td>${circuito.nombre}</td>
-                    <td>${circuito.pais}</td>
                     <td>${circuito.dias}</td>
                     <td>
                       ${circuito.precio?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) ?? 'N/A'}

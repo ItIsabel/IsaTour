@@ -34,7 +34,7 @@ public class CircuitoController {
      * @return list de {@link CircuitoDto}
      */
     @RequestMapping(path = "", method = RequestMethod.GET)
-    public List<CircuitoDto> TodosCircuitos(
+    public List<CircuitoDto> todosCircuitos(
             @RequestParam(required = false) Integer dias,
             @RequestParam(required = false) String touroperador) {
 

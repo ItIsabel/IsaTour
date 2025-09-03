@@ -13,11 +13,18 @@ import java.util.List;
 public interface CiudadService {
 
     /**
-     * Devuelve todas las {@link Ciudad} de los itinerarios de Catai.
+     * Devuelve todas las {@link Ciudad} de los itinerarios.
      *
      * @return Un List de {@link  Ciudad} .
      */
     public List<Ciudad> getTodasCiudades();
+
+    /**
+     * Devuelve todos los paises en los que hay ciudades con itinerarios.
+     *
+     * @return Un List de Paises.
+     */
+    public List <String> getTodosPaises();
 
 
     /**
@@ -28,6 +35,12 @@ public interface CiudadService {
      */
     public Ciudad getCiudadporNombre(String nombreCiudad);
 
+    /**
+     * Devuelve todas las {@link Ciudad} de un país en las que hay un circuito disponible.
+     *
+     * @return Un List de {@link  Ciudad} .
+     */
+    public List <Ciudad> getCiudadesPorPais (String nombrePais);
 
 
 

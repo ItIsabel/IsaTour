@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,10 +32,24 @@ public class CiudadController {
      * @return list de {@link CiudadDto}
      */
     @RequestMapping(path = "", method = RequestMethod.GET)
-    public List<CiudadDto> TodasCiudades() {
+    public List<CiudadDto> todasCiudades() {
         List<Ciudad> lista = this.ciudadService.getTodasCiudades();
 
-        return lista.stream().map(e -> mapper.map(e, CiudadDto.class)).collect(Collectors.toList());
+        return lista.stream()
+                .map(e -> mapper.map(e, CiudadDto.class))
+                .sorted(Comparator.comparing(CiudadDto::getNombre))
+                .collect(Collectors.toList());    }
+
+    /**
+     * Método para recuperar un listado de paises donde están las ciudades.
+     *
+     * @return list de Pais
+     */
+    @GetMapping("/paises")
+    public List<String> todosPaises() {
+        return this.ciudadService.getTodosPaises();
     }
+
 }
+
 

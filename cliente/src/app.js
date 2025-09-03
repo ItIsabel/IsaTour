@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import './header/app-header.js';
 import './ciudad/ciudad-lista.js';
+import './contacto/contacto-page.js';
 
 export class MyApp extends LitElement {
     static styles = css`
@@ -41,6 +42,9 @@ export class MyApp extends LitElement {
             case 'ciudades':
                 this.currentView = 'ciudades';
                 break;
+            case 'contacto':
+                this.currentView = 'contacto';
+                break;
             default:
                 this.currentView = 'circuitos';
         }
@@ -54,6 +58,9 @@ export class MyApp extends LitElement {
                 break;
             case 'ciudades':
                 this.currentView = 'ciudades';
+                break;
+            case 'contacto':
+                this.currentView = 'contacto';
                 break;
             default:
                 this.currentView = 'circuitos';
@@ -75,11 +82,13 @@ export class MyApp extends LitElement {
     getCurrentPage() {
         switch(this.currentView) {
             case 'circuitos':
-                return 'home';
+                return 'circuitos';
             case 'ciudades':
-                return 'about';
+                return 'ciudades';
+            case 'contacto':
+                return 'contacto';
             default:
-                return 'home';
+                return 'circuitos';
         }
     }
 
@@ -89,6 +98,8 @@ export class MyApp extends LitElement {
                 return html`<page-circuits></page-circuits>`;
             case 'ciudades':
                 return html`<page-cities></page-cities>`;
+            case 'contacto':
+                return html`<contacto-page></contacto-page>`;
             default:
                 return html`<page-circuits></page-circuits>`;
         }

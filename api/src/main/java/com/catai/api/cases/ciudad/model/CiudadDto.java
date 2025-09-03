@@ -6,7 +6,7 @@ package com.catai.api.cases.ciudad.model;
  * entre las capas de la aplicación.
  *
  * @author Isabel Alvarez
- * @version 1.0
+ * @version 1.0.1
  * @since 1.0
  */
 public class CiudadDto {
@@ -21,6 +21,11 @@ public class CiudadDto {
      * Nombre de la ciudad.
      */
     private String nombre;
+
+    /**
+     * Nombre del pais asociado a la ciudad.
+     */
+    private String pais;
 
 
 
@@ -66,6 +71,23 @@ public class CiudadDto {
         this.nombre = nombre;
     }
 
+    /**
+     * Obtiene el país asociado a la ciudad.
+     *
+     * @return el país.
+     */
+    public String getPais() {
+        return pais;
+    }
 
+
+    /**
+     * Establece el país asociado a la ciudad.
+     *
+     * @param pais el país.
+     */
+    public void setPais(String pais) {
+        this.pais = pais;
+    }
 
 }

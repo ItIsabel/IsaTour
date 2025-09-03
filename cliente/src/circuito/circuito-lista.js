@@ -13,7 +13,8 @@ export class PageCircuits extends LitElement {
     sortOrder: { type: String },
     filterPais: { type: String },
     filterDias: { type: Number },
-    filterTouroperador: { type: String }
+    filterTouroperador: { type: String },
+    countryList: { type: Array }
   };
 
   constructor() {
@@ -27,11 +28,21 @@ export class PageCircuits extends LitElement {
     this.filterPais = '';
     this.filterDias = null;
     this.filterTouroperador = '';
+    this.countryList = [];
   }
 
   async connectedCallback() {
     super.connectedCallback();
     await this.loadCircuitos();
+    await this.loadCountryList();
+  }
+
+  async loadCountryList() {
+    try {
+      this.countryList = await circuitoService.getCountryList();
+    } catch (error) {
+      console.error('Error loading country list:', error);
+    }
   }
 
   async loadCircuitos() {
@@ -49,6 +60,22 @@ export class PageCircuits extends LitElement {
     } catch (error) {
       this.error = 'Error al cargar los circuitos. Por favor, intenta de nuevo.';
       console.error('Error loading circuits:', error);
+    } finally {
+      this.loading = false;
+    }
+  }
+
+  async loadCircuitosByCountry(country) {
+    try {
+      this.loading = true;
+      this.error = '';
+      console.log('Loading circuits for country:', country);
+      // Corrected API endpoint path to match backend controller mapping
+      this.circuitos = await circuitoService.getCircuitosByCountry(country);
+      console.log('Circuits loaded:', this.circuitos.length, 'circuits');
+    } catch (error) {
+      this.error = 'Error al cargar los circuitos por país. Por favor, intenta de nuevo.';
+      console.error('Error loading circuits by country:', error);
     } finally {
       this.loading = false;
     }
@@ -84,6 +111,7 @@ export class PageCircuits extends LitElement {
     this.showExtensionsPopup = false;
     this.currentExtensions = [];
   }
+
   render() {
     if (this.loading) {
       return html`
@@ -94,9 +122,7 @@ export class PageCircuits extends LitElement {
     }
 
     let filteredCircuitos = this.circuitos;
-    if (this.filterPais) {
-      filteredCircuitos = filteredCircuitos.filter(circuito => circuito.pais === this.filterPais);
-    }
+    // Note: Country filter is already applied by loadCircuitosByCountry, so we don't filter by country here
     if (this.filterDias !== null) {
       filteredCircuitos = filteredCircuitos.filter(circuito => circuito.dias === this.filterDias);
     }
@@ -111,9 +137,6 @@ export class PageCircuits extends LitElement {
       sortedCircuitos.sort((a, b) => this.sortOrder === 'asc' ? a.dias - b.dias : b.dias - a.dias);
     }
 
-    // Get unique countries for filter dropdown
-    const uniquePaises = [...new Set(this.circuitos.map(circuito => circuito.pais))].sort();
-
     return html`
       <div class="header">
         <h1>Circuitos Disponibles</h1>
@@ -122,7 +145,7 @@ export class PageCircuits extends LitElement {
             <label for="pais-filter">Filtrar por País:</label>
             <select id="pais-filter" @change="${this.handleFilterChange}">
               <option value="">-- Todos --</option>
-              ${uniquePaises.map(pais => html`
+              ${[...this.countryList].filter(pais => pais != null).sort((a, b) => a.localeCompare(b)).map(pais => html`
                 <option value="${pais}" ?selected="${this.filterPais === pais}">${pais}</option>
               `)}
             </select>
@@ -161,7 +184,6 @@ export class PageCircuits extends LitElement {
         <thead>
           <tr>
             <th>Nombre</th>
-            <th>País</th>
             <th @click="${() => this.toggleSort('duracion')}" style="cursor:pointer;">
               Duración
               ${this.sortBy === 'duracion' ? (this.sortOrder === 'asc' ? '▲' : '▼') : ''}
@@ -176,13 +198,12 @@ export class PageCircuits extends LitElement {
         <tbody>
           ${sortedCircuitos.map(circuito => html`
             <tr>
-              <td>${circuito.nombre}</td>
-              <td>${circuito.pais}</td>
+              <td>${circuito.nombre.charAt(0).toUpperCase() + circuito.nombre.slice(1).toLowerCase()}</td>
               <td>${circuito.dias} días</td>
               <td>${circuito.precio.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</td>
               <td>
                 ${circuito.url ? html`
-                  <a href="${circuito.url}" target="_blank" rel="noopener noreferrer" title="Ver más información">🔗</a>
+                  <a href="${circuito.url}" target="_blank", rel="noopener noreferrer" title="Ver más información">🔗</a>
                 ` : ''}
               </td>
             </tr>
@@ -206,7 +227,6 @@ export class PageCircuits extends LitElement {
     `;
   }
 
-
   handleSortChange(event) {
     this.sortBy = event.target.value;
   }
@@ -220,8 +240,16 @@ export class PageCircuits extends LitElement {
     }
   }
 
-  handleFilterChange(event) {
+  async handleFilterChange(event) {
     this.filterPais = event.target.value;
+    
+    // If a country is selected, load circuits by country using the new API endpoint
+    if (this.filterPais) {
+      await this.loadCircuitosByCountry(this.filterPais);
+    } else {
+      // If no country is selected, load all circuits
+      await this.loadCircuitos();
+    }
   }
 
   handleDiasFilterChange(event) {
@@ -239,8 +267,6 @@ export class PageCircuits extends LitElement {
     this.showExtensionsPopup = false;
     this.currentExtensions = [];
   }
-
-
 }
 
 customElements.define('page-circuits', PageCircuits);

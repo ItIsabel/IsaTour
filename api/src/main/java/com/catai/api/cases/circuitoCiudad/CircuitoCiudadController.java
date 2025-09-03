@@ -32,7 +32,7 @@ public class CircuitoCiudadController {
     ModelMapper mapper;
 
     /**
-     * Método para recuperar un listado de circuitos {@link Circuito}
+     * Método para recuperar un listado de circuitos {@link Circuito} por ciudad
      *
      * @param dto dto de búsqueda
      * @return list de {@link CircuitoCiudadDto}
@@ -56,4 +56,21 @@ public class CircuitoCiudadController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    
+    /**
+     * Método para recuperar un listado de circuitos {@link Circuito} por país
+     *
+     * @param country Nombre del país
+     * @return list de {@link Circuito}
+     */
+    @GetMapping("/por-pais/{country}")
+    public ResponseEntity<List<Circuito>> findCircuitosByCountry(@PathVariable String country) {
+        try {
+            List<Circuito> circuitos = this.circuitoCiudadService.findCircuitosByCountry(country);
+            return ResponseEntity.ok(circuitos);
+        } catch (Exception e) {
+            log.error("Error al buscar circuitos por país: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
+}

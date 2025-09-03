@@ -1,5 +1,6 @@
 package com.catai.api.cases.circuitoCiudad.service;
 
+import com.catai.api.cases.circuito.model.Circuito;
 import com.catai.api.cases.circuitoCiudad.model.CircuitoCiudad;
 import com.catai.api.cases.circuitoCiudad.model.FiltroDto;
 
@@ -20,4 +21,16 @@ public interface CircuitoCiudadService {
      * @throws RuntimeException si ocurre un error interno durante la búsqueda de la ciudad o circuitos.
      */
     public List<CircuitoCiudad> encuentraCircuitosenCiudad(FiltroDto dto) throws Exception;
+    
+    /**
+     * Busca y recupera todos los circuitos disponibles en un país específico.
+     *
+     * Este método busca todas las ciudades asociadas al país especificado y luego
+     * recupera todos los circuitos asociados a esas ciudades.
+     *
+     * @param country Nombre del país para buscar los circuitos.
+     * @return {@code List<Circuito>} Lista de circuitos encontrados; vacía si no hay circuitos
+     * o el país no existe. Nunca {@code null}.
+     */
+    public List<Circuito> findCircuitosByCountry(String country);
 }

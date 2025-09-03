@@ -1,5 +1,6 @@
 package com.catai.api.cases.circuitoCiudad.service;
 
+import com.catai.api.cases.circuito.model.Circuito;
 import com.catai.api.cases.circuitoCiudad.CircuitoCiudadRepository;
 import com.catai.api.cases.circuitoCiudad.model.CircuitoCiudad;
 import com.catai.api.cases.circuitoCiudad.model.FiltroDto;
@@ -21,12 +22,20 @@ import java.util.List;
 @Service
 @Slf4j
 public class CircuitoCiudadServiceImpl implements CircuitoCiudadService {
-
+    
     @Autowired
     CiudadService ciudadService;
 
     @Autowired
     CircuitoCiudadRepository circuitoCiudadRepository;
+
+    public List<Circuito> findCircuitosByCountry(String country) {
+        List<CircuitoCiudad> circuitoCiudades = circuitoCiudadRepository.findByCiudadPais(country);
+        return circuitoCiudades.stream()
+                .map(CircuitoCiudad::getCircuito)
+                .distinct()
+                .toList();
+    }
 
     /**
      * {@inheritDoc}

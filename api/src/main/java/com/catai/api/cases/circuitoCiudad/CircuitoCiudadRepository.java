@@ -13,4 +13,7 @@ import java.util.List;
 public interface CircuitoCiudadRepository extends JpaRepository<CircuitoCiudad,Long> {
     @EntityGraph(attributePaths = {"ciudad"})
     public List<CircuitoCiudad> findByCiudadId(Long CiudadId);
+    
+    @EntityGraph(attributePaths = {"ciudad", "circuito"}) 
+    public List<CircuitoCiudad> findByCiudadPais(String pais);
 }

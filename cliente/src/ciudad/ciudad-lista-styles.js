@@ -88,6 +88,52 @@ export const Styles = css`
     border-color: var(--secondary-color);
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
   }
+    /* Contenedor de filtros */
+.filters-container {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 1.5rem;
+  align-items: center;
+  padding: 1rem;
+  background: linear-gradient(90deg, var(--white) 0%, rgba(52, 152, 219, 0.5) 50%, var(--white) 100%);
+  border-radius: 8px;
+  border:0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+}
+.filter-item.label{
+padding:0.4rem
+}
+
+/* Estilos para labels */
+.header label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin-right: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Estilos para selects */
+.header select {
+  background: var(--white);
+  border: 2px solid var(--light-gray);
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  cursor: pointer;
+  transition: var(--transition);
+  min-width: 140px;
+}
 
   /* Estadísticas */
   .stats {
