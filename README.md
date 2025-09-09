@@ -1,4 +1,6 @@
-Este documento detalla una API REST para la gestión de circuitos turísticos, ciudades y extensiones de viaje, junto con la arquitectura y funcionalidades de su frontend.
+# IsaTour 1.1.0
+
+Es una SPA en el front y una API Rest en el back para la gestión de circuitos turísticos, ciudades y extensiones de viaje.
 
 ## 🚀 Características Principales
 
@@ -73,7 +75,7 @@ GET /circuitos?dias=7&touroperador=Catai
 
 `GET /ciudades`
 
-Obtiene todas las ciudades disponibles en los circuitos.
+Obtiene todas las ciudades disponibles en los circuitos, ordenadas alfabéticamente por nombre.
 
 **Respuesta**:
 
@@ -87,6 +89,22 @@ Obtiene todas las ciudades disponibles en los circuitos.
     "id": 2,
     "nombre": "Barcelona"
   }
+]
+```
+
+#### 🌍 Países
+
+`GET /ciudades/paises`
+
+Obtiene todos los países donde se encuentran las ciudades disponibles.
+
+**Respuesta**:
+
+```json
+[
+  "España",
+  "Francia",
+  "Italia"
 ]
 ```
 
@@ -132,6 +150,38 @@ Busca circuitos que incluyan una ciudad específica.
   * `200 OK`: Búsqueda exitosa.
   * `400 Bad Request`: Parámetros inválidos.
   * `500 Internal Server Error`: Error interno del servidor.
+
+#### 🔍 Búsqueda de Circuitos por País
+
+`GET /buscar/por-pais/{nombrePais}`
+
+Busca circuitos disponibles en un país específico.
+
+**Parámetros de ruta**:
+
+  * `nombrePais`: Nombre del país (URL encoded).
+
+**Respuesta**:
+
+```json
+[
+  {
+    "id": 1,
+    "nombre": "Circuito España Imperial",
+    "pais": "España",
+    "dias": 8,
+    "precio": 950.0,
+    "url": "https://catai.es/circuito-espana-imperial",
+    "touroperador": "Catai"
+  }
+]
+```
+
+**Ejemplo de uso**:
+
+```bash
+GET /buscar/por-pais/España
+```
 
 #### 🌴 Extensiones
 
@@ -218,7 +268,7 @@ POST /extensiones/1
   * **Circuito ↔ Ciudad**: Relación Many-to-Many a través de la tabla `circuito_ciudad`.
   * **Circuito ↔ Extension**: Relación One-to-Many (un circuito puede tener múltiples extensiones).
 
-## FRONTEND:
+## FRONTEND
 
 ### 📁 Estructura del Proyecto
 
@@ -238,7 +288,8 @@ cliente/
 │       ├── ciudad-lista-styles.js     # Estilos de ciudades
 │       └── ciudadService.js           # Servicio API ciudades
 ├── index.html                          # Punto de entrada
-└── style.css                          # Estilos globales
+├── style.css                          # Estilos globales
+└── package.json                       # Dependencias del proyecto
 ```
 
 ### 🎨 Arquitectura de Componentes
@@ -258,6 +309,7 @@ cliente/
           * Filtrado por país, días y touroperador.
           * Ordenación por precio y duración.
           * Carga de extensiones (popup modal).
+          * Búsqueda de circuitos por país.
   * **Lista de Ciudades (PageCities)**
       * **Responsabilidad**: Exploración de ciudades y sus circuitos.
       * **Estado**: `ciudades`, `ciudadesFiltradas`, `selectedCiudad`.
@@ -266,6 +318,20 @@ cliente/
           * Visualización en grid responsive.
           * Modal con circuitos por ciudad.
 
+### 🔧 Servicios del Frontend
+
+#### CircuitoService
+Maneja todas las operaciones relacionadas con circuitos:
+- `getCircuitos(filters)`: Obtiene circuitos con filtros opcionales
+- `getExtensiones(circuitoId)`: Obtiene extensiones de un circuito
+- `getCountryList()`: Obtiene lista de países disponibles
+- `getCircuitosByCountry(country)`: Busca circuitos por país
+
+#### CiudadService
+Gestiona las operaciones de ciudades:
+- `getCiudades()`: Obtiene todas las ciudades
+- `fetchCircuitos(filtroDto)`: Busca circuitos que incluyan una ciudad específica
+
 ## INSTALACION Y EJECUCION DEL PROYECTO
 
 **Requisitos previos**:
@@ -273,9 +339,9 @@ cliente/
   * Java 17+.
   * Maven 3.6+.
   * Base de datos (configurada en `application.properties`).
-  * Servidor web (Apache, Nginx, o servidor de desarrollo).
+  * Node.js 18+ y npm (para el frontend).
 
-<!-- end list -->
+### Backend
 
 ```bash
 # Clonar el repositorio
@@ -283,8 +349,12 @@ gh repo clone ItIsabel/APICatai
 
 # Ejecutar backend
 mvn spring-boot:run
+```
 
-# Navegar al directorio del proyecto
+### Frontend
+
+```bash
+# Navegar al directorio del cliente
 cd cliente
 
 # Instalar las dependencias
@@ -294,6 +364,15 @@ npm install
 npm run dev
 # o con yarn:
 yarn dev
+```
+
+### Configuración de Variables de Entorno
+
+Asegúrate de configurar la variable de entorno para la URL de la API en el frontend:
+
+```bash
+# archivo .env en el directorio cliente/
+VITE_APP_API_URL=http://localhost:8080
 ```
 
 ## Ejemplos de Uso Completos
@@ -312,11 +391,33 @@ curl -X POST "http://localhost:8080/buscar" \
 -d '{"nombreCiudad": "Madrid"}'
 ```
 
+**Buscar circuitos por país**
+
+```bash
+curl -X GET "http://localhost:8080/buscar/por-pais/España"
+```
+
+**Obtener todas las ciudades disponibles**
+
+```bash
+curl -X GET "http://localhost:8080/ciudades"
+```
+
+**Obtener todos los países disponibles**
+
+```bash
+curl -X GET "http://localhost:8080/ciudades/paises"
+```
+
 **Obtener extensiones de un circuito**
 
 ```bash
 curl -X POST "http://localhost:8080/extensiones/1"
 ```
+
+
+
+
 
 #### Diseño del front con Penpot:
 https://design.penpot.app/#/view?file-id=518f9b2f-adb9-81b5-8006-75bb3fd7401d&page-id=518f9b2f-adb9-81b5-8006-75bb3fd7401e&section=interactions&index=0&share-id=dfec20eb-20e2-80c9-8006-75ce7cb8fe36
