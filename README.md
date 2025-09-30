@@ -1,4 +1,4 @@
-# IsaTour 1.1.0
+# IsaTour 1.1.1
 
 Es una SPA en el front y una API Rest en el back para la gestión de circuitos turísticos, ciudades y extensiones de viaje.
 
@@ -30,14 +30,22 @@ La API está construida con Spring Boot y sigue una arquitectura por capas:
 
 #### 🗺️ Circuitos
 
-`GET /circuitos`
+`POST /circuitos`
 
 Obtiene todos los circuitos disponibles con filtros opcionales.
 
-**Parámetros de consulta**:
+**Cuerpo de la petición** (opcional):
 
-  * `dias` (opcional): Filtra por duración en días.
-  * `touroperador` (opcional): Filtra por nombre del touroperador.
+```json
+{
+  "nombrePais": "España",
+  "idCiudad": 1,
+  "dias": 7,
+  "touroperador": "Catai"
+}
+```
+
+**Nota**: Todos los campos del filtro son opcionales. Si no se envía body o se envía vacío, retorna todos los circuitos.
 
 **Respuesta**:
 
@@ -46,7 +54,6 @@ Obtiene todos los circuitos disponibles con filtros opcionales.
   {
     "id": 1,
     "nombre": "Circuito Andalucía",
-    "pais": "España",
     "dias": 7,
     "precio": 850.0,
     "url": "https://catai.es/circuito-andalucia",
@@ -59,16 +66,46 @@ Obtiene todos los circuitos disponibles con filtros opcionales.
 
 ```bash
 # Todos los circuitos
-GET /circuitos
+POST /circuitos
+Content-Type: application/json
+{}
 
 # Circuitos de 7 días
-GET /circuitos?dias=7
+POST /circuitos
+Content-Type: application/json
+{
+  "dias": 7
+}
 
 # Circuitos de un touroperador específico
-GET /circuitos?touroperador=Catai
+POST /circuitos
+Content-Type: application/json
+{
+  "touroperador": "Catai"
+}
 
-# Circuitos de 7 días de un touroperador específico
-GET /circuitos?dias=7&touroperador=Catai
+# Circuitos por país
+POST /circuitos
+Content-Type: application/json
+{
+  "nombrePais": "España"
+}
+
+# Circuitos por ciudad
+POST /circuitos
+Content-Type: application/json
+{
+  "idCiudad": 1
+}
+
+# Combinación de filtros
+POST /circuitos
+Content-Type: application/json
+{
+  "nombrePais": "España",
+  "dias": 7,
+  "touroperador": "Catai"
+}
 ```
 
 #### 🏙️ Ciudades
@@ -83,20 +120,31 @@ Obtiene todas las ciudades disponibles en los circuitos, ordenadas alfabéticame
 [
   {
     "id": 1,
-    "nombre": "Madrid"
+    "nombre": "Madrid",
+    "pais": "España"
   },
   {
     "id": 2,
-    "nombre": "Barcelona"
+    "nombre": "Barcelona",
+    "pais": "España"
   }
 ]
 ```
 
 #### 🌍 Países
 
-`GET /ciudades/paises`
+`POST /ciudades/paises`
 
-Obtiene todos los países donde se encuentran las ciudades disponibles.
+Obtiene todos los países donde se encuentran las ciudades disponibles, opcionalmente filtrados por criterios de circuitos.
+
+**Cuerpo de la petición** (opcional):
+
+```json
+{
+  "dias": 7,
+  "touroperador": "Catai"
+}
+```
 
 **Respuesta**:
 
@@ -108,126 +156,37 @@ Obtiene todos los países donde se encuentran las ciudades disponibles.
 ]
 ```
 
-#### 🔍 Búsqueda de Circuitos por Ciudad
+**Ejemplos de uso**:
 
-`POST /buscar`
+```bash
+# Todos los países
+POST /ciudades/paises
+Content-Type: application/json
+{}
 
-Busca circuitos que incluyan una ciudad específica.
-
-**Cuerpo de la petición**:
-
-```json
+# Países con circuitos de 7 días
+POST /ciudades/paises
+Content-Type: application/json
 {
-  "nombreCiudad": "Madrid"
+  "dias": 7
 }
-```
 
-**Respuesta**:
-
-```json
-[
-  {
-    "id": 1,
-    "circuito": {
-      "id": 1,
-      "nombre": "Circuito España Imperial",
-      "pais": "España",
-      "dias": 8,
-      "precio": 950.0,
-      "url": "https://catai.es/circuito-espana-imperial",
-      "touroperador": "Catai"
-    },
-    "ciudad": {
-      "id": 1,
-      "nombre": "Madrid"
-    }
-  }
-]
-```
-
-**Códigos de respuesta**:
-
-  * `200 OK`: Búsqueda exitosa.
-  * `400 Bad Request`: Parámetros inválidos.
-  * `500 Internal Server Error`: Error interno del servidor.
-
-#### 🔍 Búsqueda de Circuitos por País
-
-`GET /buscar/por-pais/{nombrePais}`
-
-Busca circuitos disponibles en un país específico.
-
-**Parámetros de ruta**:
-
-  * `nombrePais`: Nombre del país (URL encoded).
-
-**Respuesta**:
-
-```json
-[
-  {
-    "id": 1,
-    "nombre": "Circuito España Imperial",
-    "pais": "España",
-    "dias": 8,
-    "precio": 950.0,
-    "url": "https://catai.es/circuito-espana-imperial",
-    "touroperador": "Catai"
-  }
-]
-```
-
-**Ejemplo de uso**:
-
-```bash
-GET /buscar/por-pais/España
-```
-
-#### 🌴 Extensiones
-
-`POST /extensiones/{id}`
-
-Obtiene las extensiones disponibles para un circuito específico.
-
-**Parámetros de ruta**:
-
-  * `id`: ID del circuito.
-
-**Respuesta**:
-
-```json
-[
-  {
-    "id": 1,
-    "nombre": "Extensión Islas Baleares",
-    "circuito": {
-      "id": 1,
-      "nombre": "Circuito España Imperial",
-      "pais": "España",
-      "dias": 8,
-      "precio": 950.0,
-      "url": "https://catai.es/circuito-espana-imperial",
-      "touroperador": "Catai"
-    }
-  }
-]
-```
-
-**Ejemplo de uso**:
-
-```bash
-POST /extensiones/1
+# Países con circuitos de un touroperador específico
+POST /ciudades/paises
+Content-Type: application/json
+{
+  "touroperador": "Catai"
+}
 ```
 
 ### Modelo de Datos
 
-#### Circuito
+#### TourDto (Circuito)
 
 ```java
 {
   "id": Long,
   "nombre": String,
-  "pais": String,
   "dias": int,
   "precio": float,
   "url": String,
@@ -235,38 +194,47 @@ POST /extensiones/1
 }
 ```
 
-#### Ciudad
+#### CityDto (Ciudad)
 
 ```java
 {
   "id": Long,
-  "nombre": String
-}
-```
-
-#### Extension
-
-```java
-{
-  "id": long,
   "nombre": String,
-  "circuito": CircuitoDto
+  "pais": String
 }
 ```
 
-#### FiltroDto (para búsquedas)
+#### TourFilterDto (para búsquedas)
 
 ```java
 {
-  "nombreCiudad": String,
-  "idCircuito": long
+  "idCiudad": Long,           // ID de la ciudad
+  "idCircuito": Long,         // ID del circuito
+  "nombrePais": String,       // Nombre del país
+  "dias": Integer,            // Duración en días
+  "touroperador": String      // Nombre del touroperador
 }
 ```
+
+**Nota**: Todos los campos son opcionales y pueden combinarse para filtrados más específicos.
 
 ### Relaciones entre Entidades
 
-  * **Circuito ↔ Ciudad**: Relación Many-to-Many a través de la tabla `circuito_ciudad`.
-  * **Circuito ↔ Extension**: Relación One-to-Many (un circuito puede tener múltiples extensiones).
+  * **Tour (Circuito) ↔ City (Ciudad)**: Relación Many-to-Many a través de la tabla `circuito_ciudad` (TourCity).
+### Lógica de Filtrado
+
+El sistema de filtrado en `/circuitos` sigue esta jerarquía:
+
+1. **Filtro de ubicación** (excluyente):
+   - Si se proporciona `nombrePais`: filtra circuitos por país
+   - Si se proporciona `idCiudad`: filtra circuitos por ciudad
+   - Si no se proporciona ninguno: retorna todos los circuitos
+
+2. **Filtro de días**: Aplicado sobre el resultado del filtro de ubicación
+   - Filtra circuitos que tengan exactamente el número de días especificado
+
+3. **Filtro de touroperador**: Aplicado sobre el resultado de los filtros anteriores
+   - Filtra circuitos del touroperador especificado
 
 ## FRONTEND
 
@@ -375,49 +343,3 @@ Asegúrate de configurar la variable de entorno para la URL de la API en el fron
 VITE_APP_API_URL=http://localhost:8080
 ```
 
-## Ejemplos de Uso Completos
-
-**Buscar circuitos de 7 días**
-
-```bash
-curl -X GET "http://localhost:8080/circuitos?dias=7"
-```
-
-**Buscar circuitos que pasan por Madrid**
-
-```bash
-curl -X POST "http://localhost:8080/buscar" \
--H "Content-Type: application/json" \
--d '{"nombreCiudad": "Madrid"}'
-```
-
-**Buscar circuitos por país**
-
-```bash
-curl -X GET "http://localhost:8080/buscar/por-pais/España"
-```
-
-**Obtener todas las ciudades disponibles**
-
-```bash
-curl -X GET "http://localhost:8080/ciudades"
-```
-
-**Obtener todos los países disponibles**
-
-```bash
-curl -X GET "http://localhost:8080/ciudades/paises"
-```
-
-**Obtener extensiones de un circuito**
-
-```bash
-curl -X POST "http://localhost:8080/extensiones/1"
-```
-
-
-
-
-
-#### Diseño del front con Penpot:
-https://design.penpot.app/#/view?file-id=518f9b2f-adb9-81b5-8006-75bb3fd7401d&page-id=518f9b2f-adb9-81b5-8006-75bb3fd7401e&section=interactions&index=0&share-id=dfec20eb-20e2-80c9-8006-75ce7cb8fe36
