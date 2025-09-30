@@ -1,5 +1,6 @@
 import { LitElement, html, css } from 'lit';
 import { ciudadService } from './ciudadService.js';
+import { circuitoService } from '../circuito/circuitoService.js';
 import { Styles } from './ciudad-lista-styles.js';
 export class PageCities extends LitElement {
   static styles = Styles;
@@ -16,7 +17,9 @@ export class PageCities extends LitElement {
     loadingCircuitos: { type: Boolean },
     errorCircuitos: { type: String },
     filterPais: { type: String },
-    countryList: { type: Array }
+    countryList: { type: Array },
+    sortBy: { type: String },
+    sortOrder: { type: String }
   };
 
   constructor() {
@@ -33,6 +36,8 @@ export class PageCities extends LitElement {
     this.errorCircuitos = '';
     this.filterPais = '';
     this.countryList = [];
+    this.sortBy = 'precio';
+    this.sortOrder = 'asc';
   }
 
   async connectedCallback() {
@@ -92,14 +97,38 @@ export class PageCities extends LitElement {
     this.errorCircuitos = '';
     this.circuitos = [];
     try {
-      const filtroDto = { nombreCiudad: ciudad.nombre, idCircuito: 0 };
-      const response = await ciudadService.fetchCircuitos(filtroDto);
-      this.circuitos = response.map(item => item.circuito);
+      const filters = { idCiudad: ciudad.id };
+      this.circuitos = await circuitoService.getCircuitos(filters);
+      this.sortCircuitos();
     } catch (error) {
       this.errorCircuitos = 'Error al cargar circuitos para la ciudad.';
     } finally {
       this.loadingCircuitos = false;
     }
+  }
+
+  sortCircuitos() {
+    if (!this.circuitos) return;
+
+    this.circuitos.sort((a, b) => {
+      let compare = 0;
+      if (this.sortBy === 'precio') {
+        compare = a.precio - b.precio;
+      } else if (this.sortBy === 'dias') {
+        compare = a.dias - b.dias;
+      }
+      return this.sortOrder === 'asc' ? compare : -compare;
+    });
+  }
+
+  toggleSort(column) {
+    if (this.sortBy === column) {
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = column;
+      this.sortOrder = 'asc';
+    }
+    this.sortCircuitos();
   }
 
   async handleCityClick(ciudad) {
@@ -196,8 +225,14 @@ export class PageCities extends LitElement {
               <thead>
                 <tr>
                   <th>Nombre</th>
-                  <th>Días</th>
-                  <th>Precio</th>
+                  <th @click="${() => this.toggleSort('dias')}" style="cursor:pointer;">
+                    Días
+                    ${this.sortBy === 'dias' ? (this.sortOrder === 'asc' ? '▲' : '▼') : ''}
+                  </th>
+                  <th @click="${() => this.toggleSort('precio')}" style="cursor:pointer;">
+                    Precio
+                    ${this.sortBy === 'precio' ? (this.sortOrder === 'asc' ? '▲' : '▼') : ''}
+                  </th>
                   <th>URL</th>
                 </tr>
               </thead>

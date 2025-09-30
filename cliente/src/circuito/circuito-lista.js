@@ -37,12 +37,23 @@ export class PageCircuits extends LitElement {
     await this.loadCountryList();
   }
 
-  async loadCountryList() {
+  async loadCountryList(filters = {}) {
     try {
-      this.countryList = await circuitoService.getCountryList();
+      this.countryList = await circuitoService.getCountryList(filters);
     } catch (error) {
       console.error('Error loading country list:', error);
     }
+  }
+
+  getCurrentFiltersForCountry() {
+    const filters = {};
+    if (this.filterDias !== null) {
+      filters.dias = this.filterDias;
+    }
+    if (this.filterTouroperador) {
+      filters.touroperador = this.filterTouroperador;
+    }
+    return filters;
   }
 
   async loadCircuitos() {
@@ -56,7 +67,11 @@ export class PageCircuits extends LitElement {
       if (this.filterTouroperador) {
         filters.touroperador = this.filterTouroperador;
       }
+      if (this.filterPais) {
+        filters.nombrePais = this.filterPais;
+      }
       this.circuitos = await circuitoService.getCircuitos(filters);
+
     } catch (error) {
       this.error = 'Error al cargar los circuitos. Por favor, intenta de nuevo.';
       console.error('Error loading circuits:', error);
@@ -65,21 +80,32 @@ export class PageCircuits extends LitElement {
     }
   }
 
-  async loadCircuitosByCountry(country) {
-    try {
-      this.loading = true;
-      this.error = '';
-      console.log('Loading circuits for country:', country);
-      // Corrected API endpoint path to match backend controller mapping
-      this.circuitos = await circuitoService.getCircuitosByCountry(country);
-      console.log('Circuits loaded:', this.circuitos.length, 'circuits');
-    } catch (error) {
-      this.error = 'Error al cargar los circuitos por país. Por favor, intenta de nuevo.';
-      console.error('Error loading circuits by country:', error);
-    } finally {
-      this.loading = false;
-    }
+  sortCircuitos() {
+    if (!this.circuitos) return;
+
+    this.circuitos = [...this.circuitos].sort((a, b) => {
+      let compare = 0;
+      if (this.sortBy === 'precio') {
+        compare = a.precio - b.precio;
+      } else if (this.sortBy === 'duracion') {
+        compare = a.dias - b.dias;
+      }
+      return this.sortOrder === 'asc' ? compare : -compare;
+    });
+    this.requestUpdate();
   }
+
+  toggleSort(column) {
+    if (this.sortBy === column) {
+      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    } else {
+      this.sortBy = column;
+      this.sortOrder = 'asc';
+    }
+    this.sortCircuitos();
+  }
+
+
 
   async loadExtensiones(circuitoId) {
     try {
@@ -121,22 +147,6 @@ export class PageCircuits extends LitElement {
       `;
     }
 
-    let filteredCircuitos = this.circuitos;
-    // Note: Country filter is already applied by loadCircuitosByCountry, so we don't filter by country here
-    if (this.filterDias !== null) {
-      filteredCircuitos = filteredCircuitos.filter(circuito => circuito.dias === this.filterDias);
-    }
-    if (this.filterTouroperador) {
-      filteredCircuitos = filteredCircuitos.filter(circuito => circuito.touroperador === this.filterTouroperador);
-    }
-
-    const sortedCircuitos = [...filteredCircuitos];
-    if (this.sortBy === 'precio') {
-      sortedCircuitos.sort((a, b) => this.sortOrder === 'asc' ? a.precio - b.precio : b.precio - a.precio);
-    } else if (this.sortBy === 'duracion') {
-      sortedCircuitos.sort((a, b) => this.sortOrder === 'asc' ? a.dias - b.dias : b.dias - a.dias);
-    }
-
     return html`
       <div class="header">
         <h1>Circuitos Disponibles</h1>
@@ -151,15 +161,15 @@ export class PageCircuits extends LitElement {
             </select>
           </div>
 
-          <div class="filter-item">
-            <label for="dias-filter">Filtrar por Días:</label>
-            <select id="dias-filter" @change="${this.handleDiasFilterChange}">
-              <option value="">-- Todos --</option>
-              ${[...new Set(this.circuitos.map(circuito => circuito.dias))].sort().map(dias => html`
-                <option value="${dias}" ?selected="${this.filterDias === dias}">${dias} días</option>
-              `)}
-            </select>
-          </div>
+              <div class="filter-item">
+                <label for="dias-filter">Filtrar por Días:</label>
+                <select id="dias-filter" @change="${this.handleDiasFilterChange}">
+                  <option value="">-- Todos --</option>
+                  ${[...new Set(this.circuitos.map(circuito => circuito.dias))].sort((a, b) => a - b).map(dias => html`
+                    <option value="${dias}" ?selected="${this.filterDias === dias}">${dias} días</option>
+                  `)}
+                </select>
+              </div>
 
           <div class="filter-item">
             <label for="touroperador-filter">Filtrar por Touroperador:</label>
@@ -196,7 +206,7 @@ export class PageCircuits extends LitElement {
           </tr>
         </thead>
         <tbody>
-          ${sortedCircuitos.map(circuito => html`
+          ${this.circuitos.map(circuito => html`
             <tr>
               <td>${circuito.nombre.charAt(0).toUpperCase() + circuito.nombre.slice(1).toLowerCase()}</td>
               <td>${circuito.dias} días</td>
@@ -231,36 +241,23 @@ export class PageCircuits extends LitElement {
     this.sortBy = event.target.value;
   }
 
-  toggleSort(column) {
-    if (this.sortBy === column) {
-      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortBy = column;
-      this.sortOrder = 'asc';
-    }
-  }
-
   async handleFilterChange(event) {
     this.filterPais = event.target.value;
-    
-    // If a country is selected, load circuits by country using the new API endpoint
-    if (this.filterPais) {
-      await this.loadCircuitosByCountry(this.filterPais);
-    } else {
-      // If no country is selected, load all circuits
-      await this.loadCircuitos();
-    }
+    await this.loadCircuitos();
+    await this.loadCountryList(this.getCurrentFiltersForCountry());
   }
 
-  handleDiasFilterChange(event) {
+  async handleDiasFilterChange(event) {
     const value = event.target.value;
     this.filterDias = value ? parseInt(value) : null;
-    this.loadCircuitos();
+    await this.loadCircuitos();
+    await this.loadCountryList(this.getCurrentFiltersForCountry());
   }
 
-  handleTouroperadorFilterChange(event) {
+  async handleTouroperadorFilterChange(event) {
     this.filterTouroperador = event.target.value;
-    this.loadCircuitos();
+    await this.loadCircuitos();
+    await this.loadCountryList(this.getCurrentFiltersForCountry());
   }
 
   closeExtensionsPopup() {
