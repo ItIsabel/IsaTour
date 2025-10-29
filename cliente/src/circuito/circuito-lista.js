@@ -40,6 +40,7 @@ export class PageCircuits extends LitElement {
   async loadCountryList(filters = {}) {
     try {
       this.countryList = await circuitoService.getCountryList(filters);
+      this.countryList = [...new Set(this.countryList)].filter(pais => pais != null).sort();
     } catch (error) {
       console.error('Error loading country list:', error);
     }
@@ -162,6 +163,7 @@ export class PageCircuits extends LitElement {
       <table>
         <thead>
           <tr>
+            <th></th>
             <th>Nombre</th>
             <th @click="${() => this.toggleSort('duracion')}" style="cursor:pointer;">
               Duración
@@ -171,20 +173,15 @@ export class PageCircuits extends LitElement {
               Precio
               ${this.sortBy === 'precio' ? (this.sortOrder === 'asc' ? '▲' : '▼') : ''}
             </th>
-            <th>URL</th>
           </tr>
         </thead>
         <tbody>
           ${this.circuitos.map(circuito => html`
-            <tr>
+            <tr @click="${() => this.handleRowClick(circuito)}" style="cursor: pointer;">
+              <td><img src="media/${circuito.touroperador}.png" alt="${circuito.touroperador}"></td>
               <td>${circuito.nombre.charAt(0).toUpperCase() + circuito.nombre.slice(1).toLowerCase()}</td>
               <td>${circuito.dias} días</td>
               <td>${circuito.precio.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</td>
-              <td>
-                ${circuito.url ? html`
-                  <a href="${circuito.url}" target="_blank", rel="noopener noreferrer" title="Ver más información">🔗</a>
-                ` : ''}
-              </td>
             </tr>
           `)}
         </tbody>
@@ -232,6 +229,12 @@ export class PageCircuits extends LitElement {
   closeExtensionsPopup() {
     this.showExtensionsPopup = false;
     this.currentExtensions = [];
+  }
+
+  handleRowClick(circuito) {
+    if (circuito.url) {
+      window.open(circuito.url, '_blank');
+    }
   }
 }
 

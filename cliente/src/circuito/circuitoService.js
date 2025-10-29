@@ -21,9 +21,16 @@ export const circuitoService = {
 
   async getCountryList(filters = {}) {
     try {
-      const tours = await this.getCircuitos(filters);
-      const countries = [...new Set(tours.map(tour => tour.nombrePais))].filter(Boolean);
-      return countries;
+      const response = await fetch(`${BASE_URL}/ciudades/paises`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(filters)
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      return data;
     } catch (error) {
       console.error('Error fetching country list:', error);
       throw error;

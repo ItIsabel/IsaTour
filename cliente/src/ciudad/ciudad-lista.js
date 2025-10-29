@@ -224,6 +224,7 @@ export class PageCities extends LitElement {
             <table>
               <thead>
                 <tr>
+                  <th></th>
                   <th>Nombre</th>
                   <th @click="${() => this.toggleSort('dias')}" style="cursor:pointer;">
                     Días
@@ -238,6 +239,7 @@ export class PageCities extends LitElement {
               <tbody>
                 ${this.circuitos.map(circuito => html`
                   <tr @click="${() => circuito.url && window.open(circuito.url, '_blank')}" style="${circuito.url ? 'cursor: pointer;' : ''}">
+                    <td><img src="media/${circuito.touroperador}.png" alt="${circuito.touroperador}"></td>
                     <td>${circuito.nombre}</td>
                     <td>${circuito.dias}</td>
                     <td>

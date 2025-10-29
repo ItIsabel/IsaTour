@@ -145,6 +145,23 @@ table {
   overflow: hidden;
   box-shadow: var(--shadow);
   margin-bottom: 2rem;
+  table-layout: fixed;
+}
+
+table th:nth-child(1), table td:nth-child(1) {
+  width: 20%;
+}
+
+table th:nth-child(2), table td:nth-child(2) {
+  width: 40%;
+}
+
+table th:nth-child(3), table td:nth-child(3) {
+  width: 20%;
+}
+
+table th:nth-child(4), table td:nth-child(4) {
+  width: 20%;
 }
 
 table thead {
@@ -189,6 +206,11 @@ table td {
   color: var(--text-color);
   font-size: 0.875rem;
   vertical-align: middle;
+}
+
+table td img {
+  width: 60%;
+  height: auto;
 }
 
 /* Enlaces en la tabla */

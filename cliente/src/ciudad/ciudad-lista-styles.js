@@ -205,9 +205,79 @@ padding:0.4rem
   }
 
   .ciudad-dialog table {
-    max-width: 100%;
-    overflow-x: auto;
-    display: block;
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    table-layout: fixed;
+  }
+
+  .ciudad-dialog table th:nth-child(1), .ciudad-dialog table td:nth-child(1) {
+    width: 20%;
+  }
+
+  .ciudad-dialog table th:nth-child(2), .ciudad-dialog table td:nth-child(2) {
+    width: 40%;
+  }
+
+  .ciudad-dialog table th:nth-child(3), .ciudad-dialog table td:nth-child(3) {
+    width: 20%;
+  }
+
+  .ciudad-dialog table th:nth-child(4), .ciudad-dialog table td:nth-child(4) {
+    width: 20%;
+  }
+
+  .ciudad-dialog table thead {
+    background: linear-gradient(135deg, var(--primary-color), #a5c0daff);
+    color: var(--white);
+  }
+
+  .ciudad-dialog table th {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.875rem;
+    position: relative;
+  }
+
+  .ciudad-dialog table th[style*="cursor:pointer"] {
+    user-select: none;
+    transition: var(--transition);
+  }
+
+  .ciudad-dialog table th[style*="cursor:pointer"]:hover {
+    background: rgba(18, 124, 156, 0.59);
+  }
+
+  .ciudad-dialog table tbody tr {
+    border-bottom: 1px solid var(--light-gray);
+    transition: var(--transition);
+  }
+
+  .ciudad-dialog table tbody tr:hover {
+    background: rgba(52, 152, 219, 0.5);
+  }
+
+  .ciudad-dialog table tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  .ciudad-dialog table td {
+    padding: 1rem 1.5rem;
+    color: var(--text-color);
+    font-size: 0.875rem;
+    vertical-align: middle;
+  }
+
+  .ciudad-dialog table td img {
+    width: 80%;
+    height: auto;
   }
 
   .ciudad-dialog .popup-close-button {
