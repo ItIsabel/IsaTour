@@ -1,7 +1,9 @@
 import { LitElement, html, css } from 'lit';
 import './header/app-header.js';
+import './login/login-page.js';
 import './ciudad/ciudad-lista.js';
 import './contacto/contacto-page.js';
+import './circuito-operador/circuito-operador-lista.js';
 
 export class MyApp extends LitElement {
     static styles = css`
@@ -25,6 +27,7 @@ export class MyApp extends LitElement {
     constructor() {
         super();
         this.currentView = 'circuitos';
+        this.checkInitialAuthStatus();
     }
 
     firstUpdated() {
@@ -32,12 +35,26 @@ export class MyApp extends LitElement {
         this.addEventListener('page-change', this.handlePageChange);
     }
 
+    checkInitialAuthStatus() {
+        const token = localStorage.getItem('authToken');
+        const tourOperador = localStorage.getItem('tourOperador');
+        if (token && tourOperador) {
+            this.currentView = 'circuitos-operador';
+        }
+    }
+
     handlePageChange = (e) => {
         const { page } = e.detail;
-        
+
         switch(page) {
+            case 'login':
+                this.currentView = 'login';
+                break;
             case 'circuitos':
                 this.currentView = 'circuitos';
+                break;
+            case 'circuitos-operador':
+                this.currentView = 'circuitos-operador';
                 break;
             case 'ciudades':
                 this.currentView = 'ciudades';
@@ -81,8 +98,12 @@ export class MyApp extends LitElement {
 
     getCurrentPage() {
         switch(this.currentView) {
+            case 'login':
+                return 'login';
             case 'circuitos':
                 return 'circuitos';
+            case 'circuitos-operador':
+                return 'circuitos-operador';
             case 'ciudades':
                 return 'ciudades';
             case 'contacto':
@@ -94,8 +115,12 @@ export class MyApp extends LitElement {
 
     renderCurrentView() {
         switch(this.currentView) {
+            case 'login':
+                return html`<login-page></login-page>`;
             case 'circuitos':
                 return html`<page-circuits></page-circuits>`;
+            case 'circuitos-operador':
+                return html`<page-circuits-operador></page-circuits-operador>`;
             case 'ciudades':
                 return html`<page-cities></page-cities>`;
             case 'contacto':

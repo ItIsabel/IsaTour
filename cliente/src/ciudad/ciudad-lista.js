@@ -233,19 +233,15 @@ export class PageCities extends LitElement {
                     Precio
                     ${this.sortBy === 'precio' ? (this.sortOrder === 'asc' ? '▲' : '▼') : ''}
                   </th>
-                  <th>URL</th>
                 </tr>
               </thead>
               <tbody>
                 ${this.circuitos.map(circuito => html`
-                  <tr>
+                  <tr @click="${() => circuito.url && window.open(circuito.url, '_blank')}" style="${circuito.url ? 'cursor: pointer;' : ''}">
                     <td>${circuito.nombre}</td>
                     <td>${circuito.dias}</td>
                     <td>
                       ${circuito.precio?.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' }) ?? 'N/A'}
-                    </td>
-                    <td>
-                      ${circuito.url ? html`<a href="${circuito.url}" target="_blank" rel="noopener noreferrer">🔗</a>` : ''}
                     </td>
                   </tr>
                 `)}

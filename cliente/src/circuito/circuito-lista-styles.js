@@ -38,7 +38,7 @@ export const Styles = css`
   grid-row: 2;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: space-between;
   gap: 1.5rem;
   align-items: center;
   padding: 1rem;
@@ -46,6 +46,15 @@ export const Styles = css`
   border-radius: 8px;
   border:0.5rem;
   margin-bottom: 1.5rem;
+}
+
+.filter-left {
+  flex: 0 0 25%;
+}
+
+.filter-right {
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .filter-item {
@@ -88,6 +97,31 @@ padding:0.4rem
   outline: none;
   border-color: var(--secondary-color);
   box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+/* Estilos para inputs de filtro */
+.header input[type="text"],
+.filter-input {
+  background: var(--white);
+  border: 2px solid var(--light-gray);
+  border-radius: var(--border-radius);
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  transition: var(--transition);
+  min-width: 200px;
+}
+
+.header input[type="text"]:focus,
+.filter-input:focus {
+  outline: none;
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.header input[type="text"]:hover,
+.filter-input:hover {
+  border-color: var(--secondary-color);
 }
 
 /* Mensaje de error */
@@ -198,6 +232,51 @@ table td button:disabled {
   cursor: not-allowed;
 }
 
+/* Estilos específicos para botones de editar y eliminar */
+.btn-edit {
+  background: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  font-size: 0.75rem;
+  font-weight: 700; /* Bold */
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-edit:hover:not(:disabled) {
+  background: #27ae60; /* Verde WCAG compliant */
+  color: var(--white);
+  font-weight: 700; /* Negrita */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+}
+
+.btn-delete {
+  background: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  font-size: 0.75rem;
+  font-weight: 700; /* Bold */
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background: #e74c3c; /* Rojo WCAG compliant */
+  color: var(--white);
+  font-weight: 700; /* Negrita */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
 /* Popup de extensiones */
 .popup-overlay {
   position: fixed;
@@ -287,6 +366,150 @@ table td button:disabled {
   box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
 }
 
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
+  position: relative;
+}
+
+.create-dialog {
+  all: unset;
+  display: block;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  max-width: 800px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 2rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  z-index: 3000;
+  border: none;
+}
+
+.form-section {
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-section h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.1rem;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.25);
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+}
+
+.btn-cancel {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #5a6268;
+}
+
+.btn-save {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.btn-save:hover {
+  background-color: #218838;
+}
+
+.field-error {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
 /* Animaciones */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -323,7 +546,7 @@ table td button:disabled {
     gap: 1rem;
     padding: 1.5rem;
   }
-  
+
   .header h1 {
     grid-column: 1;
     grid-row: 1;
@@ -337,24 +560,29 @@ table td button:disabled {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .header select {
     width: 100%;
     margin-bottom: 0.5rem;
   }
-  
+
   table {
     font-size: 0.75rem;
   }
-  
+
   table th,
   table td {
     padding: 0.75rem 0.5rem;
   }
-  
+
   .popup-content {
     margin: 1rem;
     padding: 1.5rem;
+  }
+
+  .create-dialog {
+    margin: 1rem;
+    width: calc(100% - 2rem);
   }
 }
 
@@ -362,27 +590,34 @@ table td button:disabled {
   .header {
     padding: 1rem;
   }
-  
+
   .header h1 {
     font-size: 1.5rem;
   }
-  
+
   table {
     overflow-x: auto;
     display: block;
     white-space: nowrap;
   }
-  
+
   table thead,
   table tbody,
   table tr {
     display: block;
   }
-  
+
   table th,
   table td {
     display: inline-block;
     width: 120px;
     text-align: center;
   }
+
+  .create-dialog {
+    margin: 0.5rem;
+    width: calc(100% - 1rem);
+    padding: 1rem;
+  }
+}
 `;

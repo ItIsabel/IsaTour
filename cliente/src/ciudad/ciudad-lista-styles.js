@@ -192,8 +192,8 @@ padding:0.4rem
     display: block;
     position: fixed;
     top: 10%;
-    left: 10%;
-    width: 80%;
+    left: 15%;
+    width: 70%;
     max-height: 80%;
     overflow: auto;
     background: var(--white);

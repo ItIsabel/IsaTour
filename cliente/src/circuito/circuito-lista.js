@@ -107,37 +107,6 @@ export class PageCircuits extends LitElement {
 
 
 
-  async loadExtensiones(circuitoId) {
-    try {
-      this.loadingExtensions = { ...this.loadingExtensions, [circuitoId]: true };
-      this.requestUpdate();
-
-      const extensiones = await circuitoService.getExtensiones(circuitoId);
-
-      this.currentExtensions = extensiones;
-      this.showExtensionsPopup = true;
-      this.requestUpdate();
-
-      // Optionally store extensions in circuito object
-      this.circuitos = this.circuitos.map(circuito => {
-        if (circuito.id === circuitoId) {
-          return { ...circuito, extensiones };
-        }
-        return circuito;
-      });
-    } catch (error) {
-      console.error('Error loading extensions:', error);
-    } finally {
-      this.loadingExtensions = { ...this.loadingExtensions, [circuitoId]: false };
-      this.requestUpdate();
-    }
-  }
-
-  closeExtensionsPopup() {
-    this.showExtensionsPopup = false;
-    this.currentExtensions = [];
-  }
-
   render() {
     if (this.loading) {
       return html`

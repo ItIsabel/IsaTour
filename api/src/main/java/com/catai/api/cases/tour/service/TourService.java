@@ -20,5 +20,45 @@ public interface TourService {
      */
     public List<Tour> findToursWithFilters(TourFilterDto filtro);
 
+    /**
+     * Busca y recupera circuitos de un tour operador específico.
+     *
+     * @param touroperador nombre del tour operador
+     * @return {@code List<Tour>} Lista de circuitos del tour operador.
+     */
+    public List<Tour> findToursByTourOperador(String touroperador);
+
+    /**
+     * Elimina un circuito de un tour operador específico.
+     *
+     * @param touroperador nombre del tour operador
+     * @param tourId id del circuito
+     */
+    public void deleteCircuito(String touroperador, Long tourId);
+
+    /**
+     * Crea un nuevo circuito para un tour operador.
+     *
+     * @param touroperador nombre del tour operador
+     * @param tour el circuito a crear
+     * @param ciudades lista de IDs de ciudades
+     * @param meses lista de meses de operación
+     * @return el circuito creado
+     */
+    public Tour createCircuito(String touroperador, Tour tour, List<Long> ciudades, List<Integer> meses);
+
+    /**
+     * Actualiza un circuito existente.
+     *
+     * @param touroperador nombre del tour operador
+     * @param tourId id del circuito
+     * @param tour datos actualizados del circuito
+     * @param ciudades lista de IDs de ciudades
+     * @param meses lista de meses de operación
+     * @return el circuito actualizado
+     */
+    public Tour updateCircuito(String touroperador, Long tourId, Tour tour, List<Long> ciudades, List<Integer> meses);
+
+    public Tour findById(Long tourId);
 }
 

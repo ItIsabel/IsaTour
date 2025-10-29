@@ -5,21 +5,26 @@ import com.catai.api.cases.tour.model.Tour;
 import com.catai.api.cases.tourCity.model.TourCity;
 import com.catai.api.cases.tour.model.TourFilterDto;
 import com.catai.api.cases.tourCity.service.TourCityService;
-import lombok.extern.slf4j.Slf4j;
+import com.catai.api.cases.tourMonth.service.TourMonthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Slf4j
 public class TourServiceImpl implements TourService {
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TourServiceImpl.class);
     @Autowired
     TourRepository tourRepository;
 
     @Autowired
     TourCityService tourCityService;
+
+    @Autowired
+    TourMonthService tourMonthService;
 
     /**
      * {@inheritDoc}
@@ -106,5 +111,97 @@ public class TourServiceImpl implements TourService {
 
         log.debug("Filtro por touroperador '{}' aplicado. Obtenidos: {} tours", touroperador, touroperatorFilteredTours.size());
         return touroperatorFilteredTours;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Tour> findToursByTourOperador(String touroperador) {
+        return this.tourRepository.findByTouroperador(touroperador);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void deleteCircuito(String touroperador, Long tourId) {
+        Tour tour = this.tourRepository.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Circuito no encontrado"));
+
+        if (!tour.getTouroperador().equalsIgnoreCase(touroperador)) {
+            throw new RuntimeException("El circuito no pertenece al tour operador especificado");
+        }
+
+        this.tourRepository.delete(tour);
+        log.info("Circuito {} eliminado por tour operador {}", tourId, touroperador);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public Tour createCircuito(String touroperador, Tour tour, List<Long> ciudades, List<Integer> meses) {
+        // Asignar touroperador
+        tour.setTouroperador(touroperador);
+
+        // Guardar el circuito
+        Tour savedTour = tourRepository.save(tour);
+
+        // Guardar ciudades
+        if (ciudades != null && !ciudades.isEmpty()) {
+            tourCityService.updateCitiesofaTour(savedTour.getId(), ciudades);
+        }
+
+        // Guardar meses
+        if (meses != null && !meses.isEmpty()) {
+            tourMonthService.updateMesesForCircuito(savedTour, meses);
+        }
+
+        log.info("Circuito {} creado por tour operador {}", savedTour.getId(), touroperador);
+        return savedTour;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @Transactional
+    public Tour updateCircuito(String touroperador, Long tourId, Tour tour, List<Long> ciudades, List<Integer> meses) {
+        // Verificar que el circuito existe y pertenece al touroperador
+        Tour existingTour = tourRepository.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Circuito no encontrado"));
+
+        if (!existingTour.getTouroperador().equalsIgnoreCase(touroperador)) {
+            throw new RuntimeException("El circuito no pertenece al tour operador especificado");
+        }
+
+        // Actualizar datos básicos
+        existingTour.setNombre(tour.getNombre());
+        existingTour.setDias(tour.getDias());
+        existingTour.setPrecio(tour.getPrecio());
+        existingTour.setUrl(tour.getUrl());
+
+        // Guardar cambios
+        Tour updatedTour = tourRepository.save(existingTour);
+
+        // Actualizar ciudades
+        if (ciudades != null) {
+            tourCityService.updateCitiesofaTour(updatedTour.getId(), ciudades);
+        }
+
+        // Actualizar meses
+        if (meses != null) {
+            tourMonthService.updateMesesForCircuito(updatedTour, meses);
+        }
+
+        log.info("Circuito {} actualizado por tour operador {}", tourId, touroperador);
+        return updatedTour;
+    }
+
+    @Override
+    public Tour findById(Long tourId) {
+        return tourRepository.findById(tourId)
+                .orElseThrow(() -> new RuntimeException("Circuito no encontrado"));
     }
 }

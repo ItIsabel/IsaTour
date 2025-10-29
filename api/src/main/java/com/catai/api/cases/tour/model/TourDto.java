@@ -1,5 +1,10 @@
 package com.catai.api.cases.tour.model;
 
+import com.catai.api.cases.city.model.City;
+import com.catai.api.cases.tourCity.model.TourCity;
+
+import java.util.List;
+
 /**
  * DTO para la entidad Circuito.
  * Esta clase se utiliza para transferir datos de circuitos turísticos
@@ -42,6 +47,8 @@ public class TourDto {
      * Touroperador asociado al circuito.
      */
     private String touroperador;
+
+
 
 
     //GETTERS & SETTERS
@@ -157,4 +164,6 @@ public class TourDto {
     public void setTouroperador(String touroperador) {
         this.touroperador = touroperador;
     }
+
+
 }
