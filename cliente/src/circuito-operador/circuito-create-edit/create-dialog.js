@@ -227,7 +227,7 @@ export class CreateDialog extends LitElement {
       await circuitoService.createCircuito(this.touroperador, circuitoData, token);
       this.dispatchEvent(new CustomEvent('circuito-created'));
       this.closeDialog();
-      window.location.reload();
+      window.location.href = '/';
     } catch (error) {
       if (error.message.includes('400')) {
         this.formErrors.general = 'Error en los datos. Verifica que el nombre no esté duplicado.';
@@ -265,7 +265,7 @@ export class CreateDialog extends LitElement {
       await circuitoService.updateCircuito(this.touroperador, this.editingCircuito.id, circuitoData, token);
       this.dispatchEvent(new CustomEvent('circuito-updated'));
       this.closeDialog();
-      window.location.reload();
+      window.location.href = '/';
     } catch (error) {
       if (error.message.includes('400')) {
         this.formErrors.general = 'Error en los datos. Verifica que el nombre no esté duplicado.';
