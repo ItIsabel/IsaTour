@@ -21,11 +21,17 @@ export const circuitoService = {
 
   async getCountryList(filters = {}) {
     try {
-      const response = await fetch(`${BASE_URL}/ciudades/paises`, {
+      const hasFilters = Object.keys(filters).length > 0;
+      const requestOptions = {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(filters)
-      });
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      };
+      if (hasFilters) {
+        requestOptions.body = JSON.stringify(filters);
+      }
+      const response = await fetch(`${BASE_URL}/ciudades/paises`, requestOptions);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
