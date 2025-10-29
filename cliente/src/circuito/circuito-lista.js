@@ -180,9 +180,9 @@ export class PageCircuits extends LitElement {
             <tr @click="${() => this.handleRowClick(circuito)}" style="cursor: pointer;">
               <td>
                 <img 
-                  src="../../media/${circuito.touroperador}.png" 
+                  src="/media/${circuito.touroperador}.png" 
                   alt="${circuito.touroperador}"
-                  @error="${(e) => e.target.src = ''}"
+                  @error="${(e) => e.target.style.display = 'none'}"
                 >
               </td>             
               <td>${circuito.nombre.charAt(0).toUpperCase() + circuito.nombre.slice(1).toLowerCase()}</td>
