@@ -178,7 +178,13 @@ export class PageCircuits extends LitElement {
         <tbody>
           ${this.circuitos.map(circuito => html`
             <tr @click="${() => this.handleRowClick(circuito)}" style="cursor: pointer;">
-              <td><img src="media/${circuito.touroperador}.png" alt="${circuito.touroperador}"></td>
+              <td>
+                <img 
+                  src="../../media/${circuito.touroperador}.png" 
+                  alt="${circuito.touroperador}"
+                  @error="${(e) => e.target.src = ''}"
+                >
+              </td>             
               <td>${circuito.nombre.charAt(0).toUpperCase() + circuito.nombre.slice(1).toLowerCase()}</td>
               <td>${circuito.dias} días</td>
               <td>${circuito.precio.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</td>
@@ -186,20 +192,6 @@ export class PageCircuits extends LitElement {
           `)}
         </tbody>
       </table>
-
-    ${this.showExtensionsPopup ? html`
-      <div class="popup-overlay" @click="${this.closeExtensionsPopup}">
-        <div class="popup-content" @click="${e => e.stopPropagation()}">
-          <h3>Extensiones</h3>
-          <ul>
-            ${this.currentExtensions.map(extension => html`
-              <li>${extension.nombre}</li>
-            `)}
-          </ul>
-          <button class="popup-close-button" @click="${this.closeExtensionsPopup}" aria-label="Cerrar popup">×</button>
-        </div>
-      </div>
-    ` : ''}
     `;
   }
 
