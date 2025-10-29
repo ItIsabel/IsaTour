@@ -35,16 +35,13 @@ import java.util.Date;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
-    private final String jwtSecret;
 
-    public JwtAuthenticationFilter(@Value("${jwt.secret}") String jwtSecret) {
-        this.jwtSecret = jwtSecret;
-    }
+    @Value("${jwt.secret}")
+    private String jwtSecret;
 
     private Key getSecretKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
