@@ -1,7 +1,7 @@
 import './header/app-header.js';
 import './login/login-page.js';
 import './circuito/circuito-lista.js';
-import './circuito/circuito-operador-lista.js';
+import './circuito-operador/circuito-operador-lista.js';
 import './ciudad/ciudad-lista.js';
 
 // Importar el componente principal al final
