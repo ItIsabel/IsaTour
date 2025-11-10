@@ -408,7 +408,7 @@ El archivo `application.properties` requiere las siguientes variables de entorno
 
 ```properties
 # Base de datos
-DATABASE_URL=jdbc:mysql://localhost:3306/isatour
+DATABASE_URL=jdbc:mysql://localhost:3306/bbdd
 DB_USER=usuario
 DB_PASSWORD=contraseña
 
@@ -501,12 +501,12 @@ gh repo clone ItIsabel/APICatai
 
 # Configurar variables de entorno
 # Crear archivo .env o configurar en el sistema:
-export DATABASE_URL=jdbc:mysql://localhost:3306/isatour
+export DATABASE_URL=jdbc:mysql://localhost:3306/bbdd
 export DB_USER=tu_usuario
 export DB_PASSWORD=tu_contraseña
 export JWT_SECRET=tu_clave_secreta_segura_minimo_256_bits
 export ALLOWED_ORIGINS=http://localhost:3000
-export ADMINISTRADOR=admin
+export ADMINISTRADOR=admin_username
 
 # Ejecutar backend
 mvn spring-boot:run
@@ -542,49 +542,4 @@ Las variables de entorno requeridas son:
 VITE_APP_API_URL=http://localhost:8080
 ```
 
-### Primera Ejecución
 
-1. Asegúrate de que MySQL esté ejecutándose
-2. Crea la base de datos: `CREATE DATABASE isatour;`
-3. La estructura de tablas se creará automáticamente gracias a Hibernate
-4. Registra el primer touroperador a través del endpoint `/auth/register` usando credenciales de administrador
-
-### Testing
-
-```bash
-# Backend - ejecutar tests
-mvn test
-
-# Frontend - ejecutar tests (si están configurados)
-npm test
-```
-
-## 📝 Notas de Desarrollo
-
-  * Los tokens JWT expiran después de 24 horas
-  * Las contraseñas se hashean con BCrypt antes de almacenarse
-  * El sistema valida que los touroperadores solo puedan modificar sus propios circuitos
-  * Los logs de seguridad incluyen IP del cliente para auditoría
-  * CORS está configurado para aceptar múltiples orígenes
-
-## 🔄 Migración desde la versión 1.1.1
-
-Si estás actualizando desde la versión 1.1.1:
-
-1. Actualiza las dependencias del backend (Spring Security, JWT, BCrypt)
-2. Añade las nuevas variables de entorno requeridas
-3. Ejecuta las migraciones de base de datos para crear las tablas `touroperador` y `circuito_mes`
-4. Configura el usuario administrador inicial
-5. Actualiza los clientes para incluir tokens JWT en las peticiones autenticadas
-
-## 📄 Licencia
-
-[Especificar la licencia del proyecto]
-
-## 👥 Contribuciones
-
-[Instrucciones para contribuir al proyecto]
-
-## 📞 Contacto
-
-[Información de contacto del equipo]
