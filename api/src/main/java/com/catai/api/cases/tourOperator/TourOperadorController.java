@@ -71,10 +71,8 @@ public class TourOperadorController {
             response.put("tourOperador", tourOperador.getName());
             response.put("redirectUrl", "/circuitos/" + tourOperador.getName());
 
-            log.info("Login exitoso para usuario: {}", usr);
             return ResponseEntity.ok(response);
         } else {
-            log.warn("Login fallido para usuario: {}", usr);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Usuario o contraseña incorrectos"));
         }
@@ -116,10 +114,8 @@ public class TourOperadorController {
             response.put("message", "Tour operador registrado exitosamente");
             response.put("tourOperador", tourOperador.getName());
             response.put("usr", tourOperador.getUsr());
-            log.info("Tour operador registrado por {}: {}", usr, tourOperador.getUsr());
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (Exception e) {
-            log.error("Error al validar token o registrar tour operador: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Token inválido o error al registrar tour operador"));
         }

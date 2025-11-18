@@ -41,8 +41,7 @@ public class TourMonthController {
             List<Integer> meses = tourMonthService.getMesesByTourId(tourId);
             return ResponseEntity.ok(meses);
         } catch (Exception e) {
-            log.error("Error getting months for tour {}: {}", tourId, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RuntimeException("Error getting months for tour: " + e.getMessage(), e);
         }
     }
 }

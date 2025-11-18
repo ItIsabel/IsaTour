@@ -83,9 +83,8 @@ export class AppHeader extends LitElement {
             <button
               class="header__button ${this.currentPage === 'contacto' ? 'active' : ''}"
               @click="${() => this._navigateTo('contacto')}"
-              style="margin-left: 1rem;"
             >
-              CONTACTO
+              RRSS
             </button>
           </nav>
         </div>

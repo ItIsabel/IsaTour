@@ -159,39 +159,40 @@ export class PageCircuits extends LitElement {
           ${this.error}
         </div>
       ` : ''}
-
-      <table>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Nombre</th>
-            <th @click="${() => this.toggleSort('duracion')}" style="cursor:pointer;">
-              Duración
-              ${this.sortBy === 'duracion' ? (this.sortOrder === 'asc' ? '▲' : '▼') : ''}
-            </th>
-            <th @click="${() => this.toggleSort('precio')}" style="cursor:pointer;">
-              Precio
-              ${this.sortBy === 'precio' ? (this.sortOrder === 'asc' ? '▲' : '▼') : ''}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          ${this.circuitos.map(circuito => html`
-            <tr @click="${() => this.handleRowClick(circuito)}" style="cursor: pointer;">
-              <td>
-                <img 
-                  src="/media/${circuito.touroperador}.png" 
-                  alt="${circuito.touroperador}"
-                  @error="${(e) => e.target.style.display = 'none'}"
-                >
-              </td>             
-              <td>${circuito.nombre.charAt(0).toUpperCase() + circuito.nombre.slice(1).toLowerCase()}</td>
-              <td>${circuito.dias} días</td>
-              <td>${circuito.precio.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</td>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th></th>
+              <th>NOMBRE</th>
+              <th @click="${() => this.toggleSort('duracion')}" style="cursor:pointer;">
+                Duración
+                ${this.sortBy === 'duracion' ? (this.sortOrder === 'asc' ? '▲' : '▼') : ''}
+              </th>
+              <th @click="${() => this.toggleSort('precio')}" style="cursor:pointer;">
+                Precio
+                ${this.sortBy === 'precio' ? (this.sortOrder === 'asc' ? '▲' : '▼') : ''}
+              </th>
             </tr>
-          `)}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            ${this.circuitos.map(circuito => html`
+              <tr @click="${() => this.handleRowClick(circuito)}" style="cursor: pointer;">
+                <td>
+                  <img 
+                    src="/media/${circuito.touroperador}.png" 
+                    alt="${circuito.touroperador}"
+                    @error="${(e) => e.target.style.display = 'none'}"
+                  >
+                </td>             
+                <td>${circuito.nombre.charAt(0).toUpperCase() + circuito.nombre.slice(1).toLowerCase()}</td>
+                <td>${circuito.dias} días</td>
+                <td>${circuito.precio.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</td>
+              </tr>
+            `)}
+          </tbody>
+        </table>
+      </div>
     `;
   }
 

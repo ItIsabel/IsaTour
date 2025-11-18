@@ -54,8 +54,7 @@ public class TourController {
             return ResponseEntity.ok(circuitosDto);
 
         } catch (Exception e) {
-            log.error("Error al buscar circuitos con filtros: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RuntimeException("Error al buscar circuitos con filtros: " + e.getMessage(), e);
         }
     }
 
@@ -76,8 +75,7 @@ public class TourController {
             return ResponseEntity.ok(circuitosDto);
 
         } catch (Exception e) {
-            log.error("Error al buscar circuitos del tour operador {}: {}", touroperador, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RuntimeException("Error al buscar circuitos del tour operador: " + e.getMessage(), e);
         }
     }
 
@@ -94,8 +92,7 @@ public class TourController {
             this.tourService.deleteCircuito(touroperador, tourId);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            log.error("Error al eliminar circuito {} del tour operador {}: {}", tourId, touroperador, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RuntimeException("Error al eliminar circuito: " + e.getMessage(), e);
         }
     }
 
@@ -113,8 +110,7 @@ public class TourController {
             TourDto responseDto = mapper.map(createdTour, TourDto.class);
             return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
         } catch (Exception e) {
-            log.error("Error al crear circuito para tour operador {}: {}", touroperador, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RuntimeException("Error al crear circuito: " + e.getMessage(), e);
         }
     }
 
@@ -133,8 +129,7 @@ public class TourController {
             TourDto responseDto = mapper.map(updatedTour, TourDto.class);
             return ResponseEntity.ok(responseDto);
         } catch (Exception e) {
-            log.error("Error al actualizar circuito {} para tour operador {}: {}", tourId, touroperador, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RuntimeException("Error al actualizar circuito: " + e.getMessage(), e);
         }
     }
 

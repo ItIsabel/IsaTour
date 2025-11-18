@@ -68,54 +68,44 @@ export const Styles = css`
     background: #0056b3;
   }
 
-  .linkedin-link {
-    text-align: center;
+  .social-links {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1rem;
     margin-top: 2rem;
   }
 
-  .linkedin-link p {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 1rem;
-  }
-
-  .linkedin-link a {
-    display: inline-block;
-    background: #007bff;
-    color: white;
-    padding: 1rem 2rem;
+  .social-links a {
+    background: transparent;
+    border: none;
+    padding: 0;
     text-decoration: none;
-    border-radius: 4px;
-    font-size: 1.1rem;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
   }
 
-  .linkedin-link a:hover {
-    background: #0056b3;
-  }
-
-  .linkedin-link a:active {
-    background: #004085;
+  .social-icon {
+    width: 40px;
+    height: 40px;
+    background: transparent;
   }
 
   @media (max-width: 768px) {
     .contacto-container {
-      padding: 1rem;
-      margin: 1rem;
+      padding: 1.5rem;
+      margin: 0 auto 2rem;
     }
 
     h1 {
       font-size: 2rem;
     }
 
-    .linkedin-link p {
-      font-size: 1rem;
+    .social-links {
+      gap: 0.5rem;
     }
 
-    .linkedin-link a {
-      padding: 0.75rem 1.5rem;
-      font-size: 1rem;
+    .social-icon {
+      width: 30px;
+      height: 30px;
     }
   }
 `;

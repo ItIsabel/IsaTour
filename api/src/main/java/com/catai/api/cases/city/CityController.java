@@ -97,8 +97,7 @@ public class CityController {
             return ResponseEntity.ok(ciudadesDto);
 
         } catch (Exception e) {
-            log.error("Error al obtener ciudades del circuito {}: {}", tourId, e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new RuntimeException("Error al obtener ciudades del circuito: " + e.getMessage(), e);
         }
     }
 

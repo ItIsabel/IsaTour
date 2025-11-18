@@ -13,6 +13,8 @@ export const Styles = css`
   padding: 0;
   transition: all 0.3s ease;
   backdrop-filter: blur(0px);
+  width: 100%;
+  overflow-x: hidden;
 }
 
 
@@ -24,6 +26,8 @@ export const Styles = css`
   justify-content: space-between;
   align-items: center;
   gap: 2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* Estilos del logo */
@@ -75,6 +79,7 @@ export const Styles = css`
   white-space: nowrap;
   position: relative;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 .header__button::before {
@@ -125,7 +130,6 @@ export const Styles = css`
 }
 
 .header__logo:focus {
-  /* outline removed as per request */
   outline: none;
   outline-offset: 0;
   border-radius: 4px;
@@ -137,6 +141,7 @@ export const Styles = css`
     padding: 1rem;
     flex-direction: column;
     gap: 1rem;
+    width: 100%;
   }
   
   .header__logo {
@@ -147,19 +152,24 @@ export const Styles = css`
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
+    box-sizing: border-box;
   }
   
   .header__button {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-    flex: 1;
-    min-width: 140px;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    flex: 0 1 calc(50% - 0.5rem);
+    min-width: 0;
+    max-width: calc(50% - 0.5rem);
+    margin-left: 0rem;
+    box-sizing: border-box;
   }
 }
 
 @media (max-width: 480px) {
   .header__container {
     padding: 0.75rem;
+    width: 100%;
   }
   
   .header__logo {
@@ -170,11 +180,17 @@ export const Styles = css`
     flex-direction: column;
     width: 100%;
     gap: 0.5rem;
+    box-sizing: border-box;
   }
   
   .header__button {
     width: 100%;
-    max-width: 300px;
+    max-width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    margin-left: 0rem;
+    box-sizing: border-box;
   }
+}
 
 `;
