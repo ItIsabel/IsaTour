@@ -1,19 +1,37 @@
-# IsaTour 1.1.1
+# IsaTour 1.2.0
 
-Es una SPA en el front y una API Rest en el back para la gestión de circuitos turísticos, ciudades y extensiones de viaje.
+Es una SPA en el front y una API Rest en el back para la gestión de circuitos turísticos, ciudades y touroperadores.
 
 ## 🚀 Características Principales
 
   * **Gestión de Circuitos**: Permite la visualización, filtrado y ordenación de circuitos turísticos.
   * **Exploración de Ciudades**: Facilita la búsqueda y exploración de ciudades con circuitos disponibles.
   * **Filtros Avanzados**: Ofrece opciones de filtrado por país, duración y touroperador.
+  * **Autenticación JWT**: Sistema seguro de autenticación para touroperadores.
+  * **CRUD Completo**: Los touroperadores pueden crear, leer, actualizar y eliminar sus propios circuitos.
+  * **Gestión de Meses**: Control de los meses de operación de cada circuito.
   * **Interfaz Responsive**: Cuenta con un diseño adaptativo para dispositivos móviles y de escritorio.
   * **Modo Oscuro**: Permite la alternancia entre un tema claro y uno oscuro.
-  * **Arquitectura Modular**: Desarrollada con componentes reutilizables utilizando Lit Element.
+    
+## 🆕 Novedades en la Versión 1.2.0
+
+### Backend
+  * **Sistema de Autenticación**: Implementación completa de JWT con BCrypt para contraseñas.
+  * **Gestión de Touroperadores**: Nuevo módulo para registro y autenticación de operadores turísticos.
+  * **CRUD de Circuitos**: Endpoints completos para crear, actualizar y eliminar circuitos.
+  * **Gestión de Meses**: Nueva funcionalidad para asignar meses de operación a los circuitos.
+  * **Seguridad Mejorada**: Filtro JWT con validación de tokens y logging de intentos de acceso.
+  * **CORS Configurable**: Configuración de orígenes permitidos mediante variables de entorno.
+
+### Mejoras de Seguridad
+  * Validación de propiedad de circuitos antes de operaciones CRUD.
+  * Logging detallado de intentos de autenticación.
+  * Control de acceso basado en roles (admin/touroperador).
+  * Protección contra tokens expirados y malformados.
 
 ## Equipo de Desarrollo
 
-  * **Backend**: Desarrollado con Spring Boot, JPA y MySQL.
+  * **Backend**: Desarrollado con Spring Boot, JPA, Spring Security y MySQL.
   * **Frontend**: Implementado con Lit Element, CSS3 y JavaScript ES6+.
   * **Diseño**: Interfaz moderna y responsive.
 
@@ -25,21 +43,77 @@ La API está construida con Spring Boot y sigue una arquitectura por capas:
   * **Services**: Capa de lógica de negocio.
   * **Repositories**: Capa de acceso a datos usando Spring Data JPA.
   * **Models**: Entidades JPA y DTOs para transferencia de datos.
+  * **Config**: Configuración de seguridad, JWT y CORS.
 
 ### Endpoints Disponibles
+
+#### 🔐 Autenticación
+
+`POST /auth/login`
+
+Autentica un touroperador y devuelve un token JWT.
+
+**Cuerpo de la petición**:
+
+```json
+{
+  "usr": "touroperador_usuario",
+  "password": "contraseña_segura"
+}
+```
+
+**Respuesta**:
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "tourOperador": "Catai Tours",
+  "redirectUrl": "/circuitos/Catai Tours"
+}
+```
+
+---
+
+`POST /auth/register`
+
+Registra un nuevo touroperador (solo disponible para administradores).
+
+**Headers requeridos**:
+```
+Authorization: Bearer {admin_token}
+```
+
+**Cuerpo de la petición**:
+
+```json
+{
+  "name": "Nuevo Tours",
+  "usr": "nuevo_usuario",
+  "password": "contraseña_segura"
+}
+```
+
+**Respuesta**:
+
+```json
+{
+  "message": "Tour operador registrado exitosamente",
+  "tourOperador": "Nuevo Tours",
+  "usr": "nuevo_usuario"
+}
+```
 
 #### 🗺️ Circuitos
 
 `POST /circuitos`
 
-Obtiene todos los circuitos disponibles con filtros opcionales.
+Obtiene todos los circuitos disponibles con filtros opcionales. **Público - No requiere autenticación**.
 
 **Cuerpo de la petición** (opcional):
 
 ```json
 {
   "nombrePais": "España",
-  "idCiudad": 1,
   "dias": 7,
   "touroperador": "Catai"
 }
@@ -62,57 +136,106 @@ Obtiene todos los circuitos disponibles con filtros opcionales.
 ]
 ```
 
-**Ejemplos de uso**:
+---
 
-```bash
-# Todos los circuitos
-POST /circuitos
-Content-Type: application/json
-{}
+`GET /circuitos/{touroperador}`
 
-# Circuitos de 7 días
-POST /circuitos
-Content-Type: application/json
+Obtiene todos los circuitos de un touroperador específico. **Requiere autenticación**.
+
+**Headers requeridos**:
+```
+Authorization: Bearer {token}
+```
+
+**Respuesta**:
+
+```json
+[
+  {
+    "id": 1,
+    "nombre": "Circuito Andalucía",
+    "dias": 7,
+    "precio": 850.0,
+    "url": "https://catai.es/circuito-andalucia",
+    "touroperador": "Catai"
+  }
+]
+```
+
+---
+
+`POST /circuitos/{touroperador}`
+
+Crea un nuevo circuito para el touroperador. **Requiere autenticación**.
+
+**Headers requeridos**:
+```
+Authorization: Bearer {token}
+```
+
+**Cuerpo de la petición**:
+
+```json
 {
-  "dias": 7
-}
-
-# Circuitos de un touroperador específico
-POST /circuitos
-Content-Type: application/json
-{
-  "touroperador": "Catai"
-}
-
-# Circuitos por país
-POST /circuitos
-Content-Type: application/json
-{
-  "nombrePais": "España"
-}
-
-# Circuitos por ciudad
-POST /circuitos
-Content-Type: application/json
-{
-  "idCiudad": 1
-}
-
-# Combinación de filtros
-POST /circuitos
-Content-Type: application/json
-{
-  "nombrePais": "España",
-  "dias": 7,
-  "touroperador": "Catai"
+  "tour": {
+    "nombre": "Nuevo Circuito",
+    "dias": 10,
+    "precio": 1200.0,
+    "url": "https://example.com/circuito"
+  },
+  "ciudades": [1, 2, 3],
+  "meses": [6, 7, 8, 9]
 }
 ```
+
+**Respuesta**: Retorna el circuito creado con código 201.
+
+---
+
+`PUT /circuitos/{touroperador}/{tourId}`
+
+Actualiza un circuito existente. **Requiere autenticación**.
+
+**Headers requeridos**:
+```
+Authorization: Bearer {token}
+```
+
+**Cuerpo de la petición**:
+
+```json
+{
+  "tour": {
+    "nombre": "Circuito Actualizado",
+    "dias": 12,
+    "precio": 1500.0,
+    "url": "https://example.com/circuito-actualizado"
+  },
+  "ciudades": [1, 2, 3, 4],
+  "meses": [5, 6, 7, 8, 9]
+}
+```
+
+**Respuesta**: Retorna el circuito actualizado.
+
+---
+
+`DELETE /circuitos/{touroperador}/{tourId}`
+
+Elimina un circuito. **Requiere autenticación**.
+
+**Headers requeridos**:
+```
+Authorization: Bearer {token}
+```
+
+**Respuesta**: Código 204 (No Content) si la eliminación es exitosa.
 
 #### 🏙️ Ciudades
 
 `GET /ciudades`
 
-Obtiene todas las ciudades disponibles en los circuitos, ordenadas alfabéticamente por nombre.
+Obtiene todas las ciudades disponibles en los circuitos, ordenadas alfabéticamente por nombre. **Público - No requiere autenticación**.
 
 **Respuesta**:
 
@@ -131,11 +254,39 @@ Obtiene todas las ciudades disponibles en los circuitos, ordenadas alfabéticame
 ]
 ```
 
+---
+
+`GET /ciudades/{touroperador}/{tourId}/ciudades`
+
+Obtiene las ciudades de un circuito específico. **Requiere autenticación**.
+
+**Headers requeridos**:
+```
+Authorization: Bearer {token}
+```
+
+**Respuesta**:
+
+```json
+[
+  {
+    "id": 1,
+    "nombre": "Madrid",
+    "pais": "España"
+  },
+  {
+    "id": 2,
+    "nombre": "Sevilla",
+    "pais": "España"
+  }
+]
+```
+
 #### 🌍 Países
 
 `POST /ciudades/paises`
 
-Obtiene todos los países donde se encuentran las ciudades disponibles, opcionalmente filtrados por criterios de circuitos.
+Obtiene todos los países donde se encuentran las ciudades disponibles, opcionalmente filtrados por criterios de circuitos. **Público - No requiere autenticación**.
 
 **Cuerpo de la petición** (opcional):
 
@@ -156,27 +307,21 @@ Obtiene todos los países donde se encuentran las ciudades disponibles, opcional
 ]
 ```
 
-**Ejemplos de uso**:
+#### 📅 Meses
 
-```bash
-# Todos los países
-POST /ciudades/paises
-Content-Type: application/json
-{}
+`GET /meses/{tourId}/meses`
 
-# Países con circuitos de 7 días
-POST /ciudades/paises
-Content-Type: application/json
-{
-  "dias": 7
-}
+Obtiene los meses de operación de un circuito específico. **Requiere autenticación**.
 
-# Países con circuitos de un touroperador específico
-POST /ciudades/paises
-Content-Type: application/json
-{
-  "touroperador": "Catai"
-}
+**Headers requeridos**:
+```
+Authorization: Bearer {token}
+```
+
+**Respuesta**:
+
+```json
+[6, 7, 8, 9]
 ```
 
 ### Modelo de Datos
@@ -216,25 +361,66 @@ Content-Type: application/json
 }
 ```
 
-**Nota**: Todos los campos son opcionales y pueden combinarse para filtrados más específicos.
+#### CreateTourRequest / UpdateTourRequest
+
+```java
+{
+  "tour": TourDto,            // Datos del circuito
+  "ciudades": List<Long>,     // IDs de ciudades
+  "meses": List<Integer>      // Meses de operación (1-12)
+}
+```
+
+#### TourOperadorDto
+
+```java
+{
+  "id": Long,
+  "name": String,             // Nombre del touroperador
+  "usr": String,              // Usuario para login
+  "password": String          // Contraseña (solo en registro)
+}
+```
+
+**Nota**: Todos los campos de los filtros son opcionales y pueden combinarse para filtrados más específicos.
 
 ### Relaciones entre Entidades
 
   * **Tour (Circuito) ↔ City (Ciudad)**: Relación Many-to-Many a través de la tabla `circuito_ciudad` (TourCity).
-### Lógica de Filtrado
+  * **Tour (Circuito) ↔ TourMonth (Mes)**: Relación One-to-Many para los meses de operación.
+  * **TourOperador ↔ Tour (Circuito)**: Relación One-to-Many (un operador puede tener múltiples circuitos).
 
-El sistema de filtrado en `/circuitos` sigue esta jerarquía:
+### Seguridad y Autorización
 
-1. **Filtro de ubicación** (excluyente):
-   - Si se proporciona `nombrePais`: filtra circuitos por país
-   - Si se proporciona `idCiudad`: filtra circuitos por ciudad
-   - Si no se proporciona ninguno: retorna todos los circuitos
+El sistema implementa autenticación basada en JWT con las siguientes características:
 
-2. **Filtro de días**: Aplicado sobre el resultado del filtro de ubicación
-   - Filtra circuitos que tengan exactamente el número de días especificado
+  * **Endpoints Públicos**: `/auth/login`, `/circuitos` (POST), `/ciudades`, `/ciudades/paises`
+  * **Endpoints Autenticados**: Todos los demás requieren token JWT válido
+  * **Validaciones**:
+    * El touroperador solo puede modificar/eliminar sus propios circuitos
+    * Solo el administrador puede registrar nuevos touroperadores
+    * Los tokens tienen una validez de 24 horas
+  * **Seguridad de Contraseñas**: Hash BCrypt con salt automático
 
-3. **Filtro de touroperador**: Aplicado sobre el resultado de los filtros anteriores
-   - Filtra circuitos del touroperador especificado
+### Configuración de Seguridad
+
+El archivo `application.properties` requiere las siguientes variables de entorno:
+
+```properties
+# Base de datos
+DATABASE_URL=jdbc:mysql://localhost:3306/bbdd
+DB_USER=usuario
+DB_PASSWORD=contraseña
+
+# JWT
+JWT_SECRET=clave_secreta_minimo_256_bits
+
+# CORS
+ALLOWED_ORIGINS=http://localhost:3000,https://midominio.com
+
+# Administrador
+ADMINISTRADOR=admin_username
+```
 
 ## FRONTEND
 
@@ -276,7 +462,6 @@ cliente/
       * **Funcionalidades**:
           * Filtrado por país, días y touroperador.
           * Ordenación por precio y duración.
-          * Carga de extensiones (popup modal).
           * Búsqueda de circuitos por país.
   * **Lista de Ciudades (PageCities)**
       * **Responsabilidad**: Exploración de ciudades y sus circuitos.
@@ -291,7 +476,6 @@ cliente/
 #### CircuitoService
 Maneja todas las operaciones relacionadas con circuitos:
 - `getCircuitos(filters)`: Obtiene circuitos con filtros opcionales
-- `getExtensiones(circuitoId)`: Obtiene extensiones de un circuito
 - `getCountryList()`: Obtiene lista de países disponibles
 - `getCircuitosByCountry(country)`: Busca circuitos por país
 
@@ -306,7 +490,7 @@ Gestiona las operaciones de ciudades:
 
   * Java 17+.
   * Maven 3.6+.
-  * Base de datos (configurada en `application.properties`).
+  * MySQL 8.0+.
   * Node.js 18+ y npm (para el frontend).
 
 ### Backend
@@ -314,6 +498,15 @@ Gestiona las operaciones de ciudades:
 ```bash
 # Clonar el repositorio
 gh repo clone ItIsabel/APICatai
+
+# Configurar variables de entorno
+# Crear archivo .env o configurar en el sistema:
+export DATABASE_URL=jdbc:mysql://localhost:3306/bbdd
+export DB_USER=tu_usuario
+export DB_PASSWORD=tu_contraseña
+export JWT_SECRET=tu_clave_secreta_segura_minimo_256_bits
+export ALLOWED_ORIGINS=http://localhost:3000
+export ADMINISTRADOR=admin_username
 
 # Ejecutar backend
 mvn spring-boot:run
@@ -330,16 +523,23 @@ npm install
 
 # Ejecutar el servidor de desarrollo
 npm run dev
-# o con yarn:
-yarn dev
 ```
 
 ### Configuración de Variables de Entorno
 
-Asegúrate de configurar la variable de entorno para la URL de la API en el frontend:
+#### Backend (application.properties)
+Las variables de entorno requeridas son:
+- `DATABASE_URL`: URL de conexión a MySQL
+- `DB_USER`: Usuario de la base de datos
+- `DB_PASSWORD`: Contraseña de la base de datos
+- `JWT_SECRET`: Clave secreta para JWT (mínimo 256 bits)
+- `ALLOWED_ORIGINS`: Orígenes permitidos para CORS (separados por coma)
+- `ADMINISTRADOR`: Nombre de usuario del administrador
 
+#### Frontend (.env)
 ```bash
 # archivo .env en el directorio cliente/
 VITE_APP_API_URL=http://localhost:8080
 ```
+
 
