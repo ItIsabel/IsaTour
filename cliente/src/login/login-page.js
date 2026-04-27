@@ -121,7 +121,8 @@ export class LoginPage extends LitElement {
   static properties = {
     loading: { type: Boolean },
     error: { type: String },
-    isRegister: { type: Boolean }
+    isRegister: { type: Boolean },
+    isAdminLoggedIn: { type: Boolean }
   };
 
   constructor() {
@@ -129,6 +130,26 @@ export class LoginPage extends LitElement {
     this.loading = false;
     this.error = '';
     this.isRegister = false;
+    this.isAdminLoggedIn = this._checkAdminStatus();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('auth-changed', this._handleAuthChanged);
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('auth-changed', this._handleAuthChanged);
+  }
+
+  _checkAdminStatus() {
+    const tourOperador = localStorage.getItem('tourOperador');
+    return tourOperador === import.meta.env.ADM;
+  }
+
+  _handleAuthChanged = () => {
+    this.isAdminLoggedIn = this._checkAdminStatus();
   }
 
   render() {
@@ -191,7 +212,12 @@ export class LoginPage extends LitElement {
         </form>
 
         <div class="register-link">
-          ${this.isRegister ? '¿Ya tienes cuenta?' : '¿No tienes cuenta?'} <a href="#" @click="${this.toggleMode}">${this.isRegister ? 'Inicia sesión aquí' : 'Regístrate aquí'}</a>
+          ${this.isRegister
+            ? html`¿Ya tienes cuenta? <a href="#" @click="${this.toggleMode}">Inicia sesión aquí</a>`
+            : this.isAdminLoggedIn
+              ? html`<a href="#" @click="${this.toggleMode}">Registrar nuevo touroperador</a>`
+              : html`Si eres touroperador, <a href="mailto:isatour@outlook.es?subject=Solicitud%20de%20cuenta%20touroperador">contacta con nosotros</a> para abrir tu cuenta y gestionar tus circuitos`
+          }
         </div>
       </div>
     `;
@@ -259,28 +285,33 @@ export class LoginPage extends LitElement {
           body: JSON.stringify(loginData)
         });
 
-        const data = await response.json();
+        let data;
+        try {
+          data = await response.json();
+        } catch (e) {
+          data = null;
+        }
 
-      if (response.ok) {
-        // Guardar token en localStorage
-        localStorage.setItem('authToken', data.token);
-        localStorage.setItem('tourOperador', data.tourOperador);
+        if (response.ok) {
+          // Guardar token en localStorage
+          localStorage.setItem('authToken', data.token);
+          localStorage.setItem('tourOperador', data.tourOperador);
 
-        // Dispatch auth change event
-        window.dispatchEvent(new CustomEvent('auth-changed'));
+          // Dispatch auth change event
+          window.dispatchEvent(new CustomEvent('auth-changed'));
 
-        // Redirigir usando el sistema de navegación de la app
-        const event = new CustomEvent('page-change', {
-          detail: { page: 'circuitos-operador' },
-          bubbles: true,
-          composed: true
-        });
-        document.dispatchEvent(event);
+          // Redirigir usando el sistema de navegación de la app
+          const event = new CustomEvent('page-change', {
+            detail: { page: 'circuitos-operador' },
+            bubbles: true,
+            composed: true
+          });
+          document.dispatchEvent(event);
 
-        // Cambiar la URL sin recargar la página
-        window.history.pushState({}, '', data.redirectUrl);
-      } else {
-          this.error = data.error || 'Error al iniciar sesión';
+          // Cambiar la URL sin recargar la página
+          window.history.pushState({}, '', data.redirectUrl);
+        } else {
+          this.error = data?.error || 'Error al iniciar sesión';
         }
       } catch (error) {
         console.error('Error during login:', error);
