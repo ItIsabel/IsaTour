@@ -62,6 +62,50 @@ export const Styles = css`
 padding:0.4rem
 }
 
+/* Estilos específicos para botones de editar y eliminar en circuito-operador-lista*/
+.btn-edit {
+  background: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  font-size: 0.75rem;
+  font-weight: 700; /* Bold */
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-edit:hover:not(:disabled) {
+  background: #27ae60; /* Verde WCAG compliant */
+  color: var(--white);
+  font-weight: 700; /* Negrita */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+}
+
+.btn-delete {
+  background: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius);
+  font-size: 0.75rem;
+  font-weight: 700; /* Bold */
+  cursor: pointer;
+  transition: var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-delete:hover:not(:disabled) {
+  background: #e74c3c; /* Rojo WCAG compliant */
+  color: var(--white);
+  font-weight: 700; /* Negrita */
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
 /* Estilos para labels */
 .header label {
   font-size: 0.875rem;
