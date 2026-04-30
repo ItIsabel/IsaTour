@@ -92,13 +92,14 @@ export class PageCities extends LitElement {
     this.ciudadesFiltradas = filtered;
   }
 
-  async loadCircuitosForCiudad(ciudad) {
+async loadCircuitosForCiudad(ciudad) {
     this.loadingCircuitos = true;
     this.errorCircuitos = '';
     this.circuitos = [];
     try {
       const filters = { idCiudad: ciudad.id };
-      this.circuitos = await circuitoService.getCircuitos(filters);
+      const response = await circuitoService.getCircuitos(filters);
+      this.circuitos = response.content || [];
       this.sortCircuitos();
     } catch (error) {
       this.errorCircuitos = 'Error al cargar circuitos para la ciudad.';
