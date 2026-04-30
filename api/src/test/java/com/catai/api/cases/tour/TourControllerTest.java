@@ -12,8 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -75,8 +73,7 @@ public class TourControllerTest {
     @Test
     void findToursWithFilters_DeberiaRetornarListaDeTours_CuandoExistenTours() throws Exception {
         List<Tour> tours = Arrays.asList(tour1, tour2);
-        Page<Tour> tourPage = new PageImpl<>(tours);
-        when(tourService.findToursWithFilters(any(TourFilterDto.class))).thenReturn(tourPage);
+        when(tourService.findToursWithFilters(any(TourFilterDto.class))).thenReturn(tours);
         when(mapper.map(tour1, TourDto.class)).thenReturn(tourDto1);
         when(mapper.map(tour2, TourDto.class)).thenReturn(tourDto2);
 
@@ -85,10 +82,10 @@ public class TourControllerTest {
                         .content(objectMapper.writeValueAsString(filtroDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content.length()").value(2))
-                .andExpect(jsonPath("$.content[0].nombre").value("Tour Madrid"))
-                .andExpect(jsonPath("$.content[1].nombre").value("Tour Barcelona"));
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(2))
+                .andExpect(jsonPath("$[0].nombre").value("Tour Madrid"))
+                .andExpect(jsonPath("$[1].nombre").value("Tour Barcelona"));
 
         verify(tourService).findToursWithFilters(any(TourFilterDto.class));
         verify(mapper).map(tour1, TourDto.class);
@@ -97,16 +94,15 @@ public class TourControllerTest {
 
     @Test
     void findToursWithFilters_DeberiaRetornarListaVacia_CuandoNoExistenTours() throws Exception {
-        Page<Tour> emptyPage = new PageImpl<>(Collections.emptyList());
-        when(tourService.findToursWithFilters(any(TourFilterDto.class))).thenReturn(emptyPage);
+        when(tourService.findToursWithFilters(any(TourFilterDto.class))).thenReturn(Collections.emptyList());
 
         mockMvc.perform(post("/circuitos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(filtroDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content.length()").value(0));
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(0));
 
         verify(tourService).findToursWithFilters(any(TourFilterDto.class));
         verifyNoInteractions(mapper);
@@ -127,17 +123,15 @@ public class TourControllerTest {
 
     @Test
     void findToursWithFilters_DeberiaManejarFiltroNulo_CuandoRequestBodyEsNulo() throws Exception {
-        List<Tour> tours = Arrays.asList(tour1);
-        Page<Tour> tourPage = new PageImpl<>(tours);
-        when(tourService.findToursWithFilters(null)).thenReturn(tourPage);
+        when(tourService.findToursWithFilters(null)).thenReturn(Arrays.asList(tour1));
         when(mapper.map(tour1, TourDto.class)).thenReturn(tourDto1);
 
         mockMvc.perform(post("/circuitos")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content.length()").value(1));
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(1));
 
         verify(tourService).findToursWithFilters(null);
         verify(mapper).map(tour1, TourDto.class);

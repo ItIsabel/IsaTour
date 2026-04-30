@@ -4,7 +4,7 @@ import { Styles } from './circuito-lista-styles.js';
 
 export class PageCircuits extends LitElement {
   static styles = Styles;
-
+  
   static properties = {
     circuitos: { type: Array },
     loading: { type: Boolean },
@@ -14,11 +14,7 @@ export class PageCircuits extends LitElement {
     filterPais: { type: String },
     filterDias: { type: Number },
     filterTouroperador: { type: String },
-    countryList: { type: Array },
-    currentPage: { type: Number },
-    pageSize: { type: Number },
-    totalElements: { type: Number },
-    totalPages: { type: Number }
+    countryList: { type: Array }
   };
 
   constructor() {
@@ -33,10 +29,6 @@ export class PageCircuits extends LitElement {
     this.filterDias = null;
     this.filterTouroperador = '';
     this.countryList = [];
-    this.currentPage = 0;
-    this.pageSize = 20;
-    this.totalElements = 0;
-    this.totalPages = 0;
   }
 
   async connectedCallback() {
@@ -69,10 +61,7 @@ export class PageCircuits extends LitElement {
     try {
       this.loading = true;
       this.error = '';
-      const filters = {
-        page: this.currentPage,
-        size: this.pageSize
-      };
+      const filters = {};
       if (this.filterDias !== null) {
         filters.dias = this.filterDias;
       }
@@ -82,11 +71,7 @@ export class PageCircuits extends LitElement {
       if (this.filterPais) {
         filters.nombrePais = this.filterPais;
       }
-      const response = await circuitoService.getCircuitos(filters);
-      this.circuitos = response.content || [];
-      this.totalElements = response.totalElements || 0;
-      this.totalPages = response.totalPages || 0;
-      this.currentPage = response.number || 0;
+      this.circuitos = await circuitoService.getCircuitos(filters);
 
     } catch (error) {
       this.error = 'Error al cargar los circuitos. Por favor, intenta de nuevo.';
@@ -121,19 +106,7 @@ export class PageCircuits extends LitElement {
     this.sortCircuitos();
   }
 
-  async goToPage(page) {
-    if (page < 0 || page >= this.totalPages) return;
-    this.currentPage = page;
-    await this.loadCircuitos();
-  }
 
-  async prevPage() {
-    await this.goToPage(this.currentPage - 1);
-  }
-
-  async nextPage() {
-    await this.goToPage(this.currentPage + 1);
-  }
 
   render() {
     if (this.loading) {
@@ -179,6 +152,7 @@ export class PageCircuits extends LitElement {
           </div>
         </div>
       </div>
+    
 
       ${this.error ? html`
         <div class="error">
@@ -205,12 +179,12 @@ export class PageCircuits extends LitElement {
             ${this.circuitos.map(circuito => html`
               <tr @click="${() => this.handleRowClick(circuito)}" style="cursor: pointer;">
                 <td>
-                  <img
-                    src="/media/${circuito.touroperador}.png"
+                  <img 
+                    src="/media/${circuito.touroperador}.png" 
                     alt="${circuito.touroperador}"
                     @error="${(e) => e.target.style.display = 'none'}"
                   >
-                </td>
+                </td>             
                 <td>${circuito.nombre.charAt(0).toUpperCase() + circuito.nombre.slice(1).toLowerCase()}</td>
                 <td>${circuito.dias} días</td>
                 <td>${circuito.precio.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</td>
@@ -219,28 +193,6 @@ export class PageCircuits extends LitElement {
           </tbody>
         </table>
       </div>
-
-      ${this.totalPages > 1 ? html`
-        <div class="pagination">
-          <button
-            class="pagination-button"
-            ?disabled="${this.currentPage === 0}"
-            @click="${this.prevPage}"
-          >
-            Anterior
-          </button>
-          <span class="pagination-info">
-            Página ${this.currentPage + 1} de ${this.totalPages} (${this.totalElements} resultados)
-          </span>
-          <button
-            class="pagination-button"
-            ?disabled="${this.currentPage >= this.totalPages - 1}"
-            @click="${this.nextPage}"
-          >
-            Siguiente
-          </button>
-        </div>
-      ` : ''}
     `;
   }
 
@@ -250,7 +202,6 @@ export class PageCircuits extends LitElement {
 
   async handleFilterChange(event) {
     this.filterPais = event.target.value;
-    this.currentPage = 0;
     await this.loadCircuitos();
     await this.loadCountryList(this.getCurrentFiltersForCountry());
   }
@@ -258,14 +209,12 @@ export class PageCircuits extends LitElement {
   async handleDiasFilterChange(event) {
     const value = event.target.value;
     this.filterDias = value ? parseInt(value) : null;
-    this.currentPage = 0;
     await this.loadCircuitos();
     await this.loadCountryList(this.getCurrentFiltersForCountry());
   }
 
   async handleTouroperadorFilterChange(event) {
     this.filterTouroperador = event.target.value;
-    this.currentPage = 0;
     await this.loadCircuitos();
     await this.loadCountryList(this.getCurrentFiltersForCountry());
   }
@@ -283,4 +232,3 @@ export class PageCircuits extends LitElement {
 }
 
 customElements.define('page-circuits', PageCircuits);
-

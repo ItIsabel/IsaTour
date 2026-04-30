@@ -11,12 +11,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -57,10 +59,10 @@ public class TourServiceTest {
         List<Tour> tours = Arrays.asList(tour1, tour2);
         when(tourRepository.findAll()).thenReturn(tours);
 
-        Page<Tour> result = tourService.findToursWithFilters(null);
+        List<Tour> result = tourService.findToursWithFilters(null);
 
-        assertEquals(2, result.getContent().size());
-        assertEquals(tours, result.getContent());
+        assertEquals(2, result.size());
+        assertEquals(tours, result);
         verify(tourRepository).findAll();
         verifyNoInteractions(tourCityService);
     }
@@ -73,10 +75,10 @@ public class TourServiceTest {
         List<TourCity> tourCities = Arrays.asList(tourCity1);
         when(tourCityService.filterToursByCountry("Spain")).thenReturn(tourCities);
 
-        Page<Tour> result = tourService.findToursWithFilters(filtro);
+        List<Tour> result = tourService.findToursWithFilters(filtro);
 
-        assertEquals(1, result.getContent().size());
-        assertEquals(tour1, result.getContent().get(0));
+        assertEquals(1, result.size());
+        assertEquals(tour1, result.get(0));
         verify(tourCityService).filterToursByCountry("Spain");
         verifyNoMoreInteractions(tourRepository);
     }
@@ -89,10 +91,10 @@ public class TourServiceTest {
         List<TourCity> tourCities = Arrays.asList(tourCity1);
         when(tourCityService.filterToursByCity(1L)).thenReturn(tourCities);
 
-        Page<Tour> result = tourService.findToursWithFilters(filtro);
+        List<Tour> result = tourService.findToursWithFilters(filtro);
 
-        assertEquals(1, result.getContent().size());
-        assertEquals(tour1, result.getContent().get(0));
+        assertEquals(1, result.size());
+        assertEquals(tour1, result.get(0));
         verify(tourCityService).filterToursByCity(1L);
         verifyNoMoreInteractions(tourRepository);
     }
@@ -103,10 +105,10 @@ public class TourServiceTest {
         List<Tour> tours = Arrays.asList(tour1, tour2);
         when(tourRepository.findAll()).thenReturn(tours);
 
-        Page<Tour> result = tourService.findToursWithFilters(filtro);
+        List<Tour> result = tourService.findToursWithFilters(filtro);
 
-        assertEquals(1, result.getContent().size());
-        assertEquals(tour1, result.getContent().get(0));
+        assertEquals(1, result.size());
+        assertEquals(tour1, result.get(0));
         verify(tourRepository).findAll();
         verifyNoInteractions(tourCityService);
     }
@@ -117,10 +119,10 @@ public class TourServiceTest {
         List<Tour> tours = Arrays.asList(tour1, tour2);
         when(tourRepository.findAll()).thenReturn(tours);
 
-        Page<Tour> result = tourService.findToursWithFilters(filtro);
+        List<Tour> result = tourService.findToursWithFilters(filtro);
 
-        assertEquals(1, result.getContent().size());
-        assertEquals(tour1, result.getContent().get(0));
+        assertEquals(1, result.size());
+        assertEquals(tour1, result.get(0));
         verify(tourRepository).findAll();
         verifyNoInteractions(tourCityService);
     }
@@ -137,10 +139,10 @@ public class TourServiceTest {
         List<TourCity> tourCities = Arrays.asList(tourCity1, tourCity2);
         when(tourCityService.filterToursByCountry("Spain")).thenReturn(tourCities);
 
-        Page<Tour> result = tourService.findToursWithFilters(filtro);
+        List<Tour> result = tourService.findToursWithFilters(filtro);
 
-        assertEquals(1, result.getContent().size());
-        assertEquals(tour1, result.getContent().get(0));
+        assertEquals(1, result.size());
+        assertEquals(tour1, result.get(0));
         verify(tourCityService).filterToursByCountry("Spain");
         verifyNoMoreInteractions(tourRepository);
     }
@@ -151,11 +153,10 @@ public class TourServiceTest {
         List<Tour> tours = Arrays.asList(tour1, tour2);
         when(tourRepository.findAll()).thenReturn(tours);
 
-        Page<Tour> result = tourService.findToursWithFilters(filtro);
+        List<Tour> result = tourService.findToursWithFilters(filtro);
 
-        assertTrue(result.getContent().isEmpty());
+        assertTrue(result.isEmpty());
         verify(tourRepository).findAll();
         verifyNoInteractions(tourCityService);
     }
 }
-

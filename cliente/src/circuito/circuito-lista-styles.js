@@ -353,48 +353,6 @@ table td :hover {
   }
 }
 
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin: 1.5rem 0;
-  padding: 1rem;
-}
-
-.pagination-button {
-  background: var(--secondary-color);
-  color: var(--white);
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: var(--border-radius);
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: var(--transition);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.pagination-button:hover:not(:disabled) {
-  background: var(--accent-color);
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);
-}
-
-.pagination-button:disabled {
-  background: var(--light-gray);
-  color: var(--text-color);
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.pagination-info {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--text-color);
-}
-
 /* Responsive design para la página de circuitos */
 @media (max-width: 768px){
   /* Eliminar min-width de la tabla para que se ajuste */
