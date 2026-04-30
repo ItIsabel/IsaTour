@@ -7,6 +7,10 @@ import com.catai.api.cases.tour.model.TourFilterDto;
 import com.catai.api.cases.tourCity.service.TourCityService;
 import com.catai.api.cases.tourMonth.service.TourMonthService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,23 +34,44 @@ public class TourServiceImpl implements TourService {
      * {@inheritDoc}
      */
     @Override
-    public List<Tour> findToursWithFilters(TourFilterDto filtro) {
+    public Page<Tour> findToursWithFilters(TourFilterDto filtro) {
+        int pageNumber = 0;
+        int pageSize = 20;
+
         List<Tour> filteredTours;
         if (filtro == null) {
-            return this.tourRepository.findAll();
-        }else{
+            filteredTours = this.tourRepository.findAll();
+        } else {
+            // Use pagination values from filter if provided
+            if (filtro.getPage() != null) {
+                pageNumber = filtro.getPage();
+            }
+            if (filtro.getSize() != null) {
+                pageSize = filtro.getSize();
+            }
 
-        // 1. Aplicar filtro de ubicación (país o ciudad)
-        filteredTours = applyLocationFilter(filtro);
+            // 1. Aplicar filtro de ubicación (país o ciudad)
+            filteredTours = applyLocationFilter(filtro);
 
-        // 2. Aplicar filtro de dias
-        filteredTours = applyDaysFilter(filteredTours, filtro.getDias());
+            // 2. Aplicar filtro de dias
+            filteredTours = applyDaysFilter(filteredTours, filtro.getDias());
 
-        // 3. Aplicar filtro por touroperador (solo si hay filtro)
-        filteredTours = applyTourOperatorFilter(filteredTours, filtro.getTouroperador());
-
-        return filteredTours;
+            // 3. Aplicar filtro por touroperador (solo si hay filtro)
+            filteredTours = applyTourOperatorFilter(filteredTours, filtro.getTouroperador());
         }
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), filteredTours.size());
+
+        List<Tour> pageContent;
+        if (start > filteredTours.size()) {
+            pageContent = List.of();
+        } else {
+            pageContent = filteredTours.subList(start, end);
+        }
+
+        return new PageImpl<>(pageContent, pageable, filteredTours.size());
     }
 
     /**

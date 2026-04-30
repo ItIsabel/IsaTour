@@ -6,6 +6,7 @@ import com.catai.api.cases.tourCity.service.TourCityService;
 import com.catai.api.cases.tourMonth.service.TourMonthService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -38,18 +39,16 @@ public class TourController {
     ModelMapper mapper;
 
     /**
-     * Método para recuperar un listado de circuitos {@link Tour} aplicando filtros
+     * Método para recuperar un listado paginado de circuitos {@link Tour} aplicando filtros
      *
      * @param filtro dto con filtros
-     * @return list de {@link TourDto}
+     * @return page de {@link TourDto}
      */
     @PostMapping("")
-    public ResponseEntity<List<TourDto>> findToursWithFilters(@RequestBody (required = false) TourFilterDto filtro) {
+    public ResponseEntity<Page<TourDto>> findToursWithFilters(@RequestBody (required = false) TourFilterDto filtro) {
         try {
-            List<Tour> tours = this.tourService.findToursWithFilters(filtro);
-            List<TourDto> circuitosDto = tours.stream()
-                    .map(circuito -> mapper.map(circuito, TourDto.class))
-                    .collect(Collectors.toList());
+            Page<Tour> tours = this.tourService.findToursWithFilters(filtro);
+            Page<TourDto> circuitosDto = tours.map(circuito -> mapper.map(circuito, TourDto.class));
 
             return ResponseEntity.ok(circuitosDto);
 

@@ -44,7 +44,7 @@ public class CountrySearchServiceImpl implements CountrySearchService {
 
         //2. Si hay filtro de dias ó touroperadores , devuelve los paises que tengan itinerarios con esos días ó sean operados por este touroperador.
 
-        List<Tour> toursWithFilters = this.tourService.findToursWithFilters(filtro);
+        List<Tour> toursWithFilters = this.tourService.findToursWithFilters(filtro).getContent();
         List<TourCity> relations = this.tourCityService.findCitiesByTours(toursWithFilters);
         for (TourCity relation : relations) {
             if (!filteredCountries.contains(relation.getCity().getPais())) {

@@ -2,6 +2,7 @@ package com.catai.api.cases.tour.service;
 
 import com.catai.api.cases.tour.model.Tour;
 import com.catai.api.cases.tour.model.TourFilterDto;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface TourService {
      * @param filtro Objeto {@link TourFilterDto} con los filtros a aplicar.
      * @return {@code List<CircuitoCiudad>} Lista de circuitos filtrados.
      */
-    public List<Tour> findToursWithFilters(TourFilterDto filtro);
+    public Page<Tour> findToursWithFilters(TourFilterDto filtro);
 
     /**
      * Busca y recupera circuitos de un tour operador específico.

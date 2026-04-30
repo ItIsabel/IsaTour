@@ -6,10 +6,28 @@ public class TourFilterDto {
     private String nombrePais;
     private Integer dias;
     private String touroperador;
+    private Integer page = 0;
+    private Integer size = 20;
 
 
 
     //GETTERS & SETTERS
+
+    public Integer getPage() {
+        return page;
+    }
+
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize(Integer size) {
+        this.size = size;
+    }
 
 
     public String getNombrePais() {
